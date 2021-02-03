@@ -3,8 +3,8 @@ load_from = None
 resume_from = None
 dist_params = dict(backend='nccl')
 workflow = [('train', 1)]
-checkpoint_config = dict(interval=50)
-evaluation = dict(interval=50, metric='mAP', key_indicator='AP')
+checkpoint_config = dict(interval=4)
+evaluation = dict(interval=5, metric='mAP', key_indicator='AP')
 
 optimizer = dict(
     type='Adam',
@@ -139,8 +139,10 @@ val_pipeline = [
 test_pipeline = val_pipeline
 
 data_root = 'data/coco'
+
+'''
 data = dict(
-    samples_per_gpu=24,
+    samples_per_gpu=12,
     workers_per_gpu=1,
     train=dict(
         type='BottomUpCocoDataset',
@@ -157,6 +159,31 @@ data = dict(
     test=dict(
         type='BottomUpCocoDataset',
         ann_file=f'{data_root}/annotations/person_keypoints_val2017.json',
+        img_prefix=f'{data_root}/val2017/',
+        data_cfg=data_cfg,
+        pipeline=val_pipeline),
+)
+'''
+
+
+data = dict(
+    samples_per_gpu=12,
+    workers_per_gpu=1,
+    train=dict(
+        type='BottomUpCocoDataset',
+        ann_file=f'{data_root}/annotations/mini_coco_train.json',
+        img_prefix=f'{data_root}/train2017/',
+        data_cfg=data_cfg,
+        pipeline=train_pipeline),
+    val=dict(
+        type='BottomUpCocoDataset',
+        ann_file=f'{data_root}/annotations/mini_coco_val.json',
+        img_prefix=f'{data_root}/val2017/',
+        data_cfg=data_cfg,
+        pipeline=val_pipeline),
+    test=dict(
+        type='BottomUpCocoDataset',
+        ann_file=f'{data_root}/annotations/mini_coco_val.json',
         img_prefix=f'{data_root}/val2017/',
         data_cfg=data_cfg,
         pipeline=val_pipeline),

@@ -88,11 +88,16 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
             (self._class_to_coco_ind[cls], self._class_to_ind[cls])
             for cls in self.classes[1:])
         self.img_ids = self.coco.getImgIds()
+        print ('ima_ids')
+        print (len(self.img_ids))
+        
         if not test_mode:
             self.img_ids = [
                 img_id for img_id in self.img_ids
                 if len(self.coco.getAnnIds(imgIds=img_id, iscrowd=None)) > 0
             ]
+
+
         self.num_images = len(self.img_ids)
         self.id2name, self.name2id = self._get_mapping_id_name(self.coco.imgs)
         self.dataset_name = 'coco'

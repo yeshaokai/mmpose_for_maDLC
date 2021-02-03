@@ -94,6 +94,7 @@ def get_multi_stage_outputs(outputs,
                 num_heatmaps += 1
 
             if with_ae[i]:
+
                 tags.append(output[:, offset_feat:])
                 if tag_per_joint:
                     tags[-1] = tags[-1][:, flip_index, :, :]
