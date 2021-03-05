@@ -26,7 +26,7 @@ def main():
     parser.add_argument(
         '--device', default='cuda:0', help='Device used for inference')
     parser.add_argument(
-        '--kpt-thr', type=float, default=0.3, help='Keypoint score threshold')
+        '--kpt-thr', type=float, default=0.001, help='Keypoint score threshold')
 
     args = parser.parse_args()
 
@@ -37,7 +37,7 @@ def main():
         args.pose_config, args.pose_checkpoint, device=args.device.lower())
 
     dataset = pose_model.cfg.data['test']['type']
-    assert (dataset == 'BottomUpCocoDataset')
+
 
     cap = cv2.VideoCapture(args.video_path)
 
@@ -73,6 +73,7 @@ def main():
             img,
             return_heatmap=return_heatmap,
             outputs=output_layer_names)
+
 
         # show the results
         vis_img = vis_pose_result(

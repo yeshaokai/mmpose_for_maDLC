@@ -43,9 +43,17 @@ class HeatmapLoss(nn.Module):
             gt(torch.Tensor[NxKxHxW]): target heatmap.
             mask(torch.Tensor[NxHxW]): mask of target.
         """
+        print ('pred size')
+        print (pred.size())
+        print ('gt size')
+        print (gt.size())
         assert pred.size() == gt.size()
         loss = ((pred - gt)**2) * mask[:, None, :, :].expand_as(pred)
+
         loss = loss.mean(dim=3).mean(dim=2).mean(dim=1)
+
+
+        
         return loss
 
 

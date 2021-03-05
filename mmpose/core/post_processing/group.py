@@ -61,9 +61,12 @@ def _match_by_tag(inp, params):
 
         tags = tag_k[idx]
         joints = np.concatenate((loc_k[idx], val_k[idx, :, None], tags), 1)
+
+        
         mask = joints[:, 2] > params.detection_threshold
         tags = tags[mask]
         joints = joints[mask]
+        print (joints[:,2])
 
         if joints.shape[0] == 0:
             continue
@@ -212,10 +215,13 @@ class HeatmapParser:
             - val_k (np.ndarray[NxKxM]):
               top k value of feature map per keypoint.
         """
+
         heatmaps = self.nms(heatmaps)
+        
         N, K, H, W = heatmaps.size()
         heatmaps = heatmaps.view(N, K, -1)
         val_k, ind = heatmaps.topk(self.params.max_num_people, dim=2)
+
 
         tags = tags.view(tags.size(0), tags.size(1), W * H, -1)
         if not self.tag_per_joint:

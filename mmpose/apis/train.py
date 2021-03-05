@@ -29,6 +29,8 @@ def train_model(model,
         meta (dict | None): Meta dict to record some important information.
             Default: None
     """
+
+
     logger = get_root_logger(cfg.log_level)
 
     # prepare data loaders
@@ -43,6 +45,7 @@ def train_model(model,
     dataloader_setting = dict(dataloader_setting,
                               **cfg.data.get('train_dataloader', {}))
 
+    
     data_loaders = [
         build_dataloader(ds, **dataloader_setting) for ds in dataset
     ]
@@ -129,4 +132,5 @@ def train_model(model,
         runner.resume(cfg.resume_from)
     elif cfg.load_from:
         runner.load_checkpoint(cfg.load_from)
+    
     runner.run(data_loaders, cfg.workflow, cfg.total_epochs)

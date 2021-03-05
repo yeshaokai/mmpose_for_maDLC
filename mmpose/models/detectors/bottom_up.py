@@ -41,6 +41,8 @@ class BottomUp(BasePose):
 
         self.backbone = builder.build_backbone(backbone)
 
+        
+        
         if keypoint_head is not None:
 
             if 'loss_keypoint' not in keypoint_head and loss_pose is not None:
@@ -167,6 +169,7 @@ class BottomUp(BasePose):
         if self.with_keypoint:
             keypoint_losses = self.keypoint_head.get_loss(
                 output, targets, masks, joints)
+
             losses.update(keypoint_losses)
 
         return losses
@@ -248,6 +251,8 @@ class BottomUp(BasePose):
                 base_size,
                 align_corners=self.use_udp)
 
+            
+            
             aggregated_heatmaps, tags_list = aggregate_results(
                 s,
                 aggregated_heatmaps,
@@ -338,7 +343,9 @@ class BottomUp(BasePose):
         for res in result:
             pose_result.append(res['keypoints'])
 
+
         for _, kpts in enumerate(pose_result):
+
             # draw each point on image
             if pose_kpt_color is not None:
                 assert len(pose_kpt_color) == len(kpts)

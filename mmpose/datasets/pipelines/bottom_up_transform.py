@@ -308,6 +308,7 @@ class BottomUpRandomFlip:
         """Perform data augmentation with random image flip."""
         image, mask, joints = results['img'], results['mask'], results[
             'joints']
+        print (joints)
         self.flip_index = results['ann_info']['flip_index']
         self.output_size = results['ann_info']['heatmap_size']
 
