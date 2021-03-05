@@ -1,5 +1,7 @@
 ## 2D Hand Keypoint Demo
 
+<img src="https://user-images.githubusercontent.com/11788150/109098558-8c54db00-775c-11eb-8966-85df96b23dc5.gif" width="600px" alt><br>
+
 ### 2D Hand Image Demo
 
 #### Using gt hand bounding boxes as input
@@ -7,7 +9,7 @@
 We provide a demo script to test a single image, given gt json file.
 
 *Hand Pose Model Preparation:*
-The pre-trained hand pose estimation model can be downloaded from [model zoo](https://mmpose.readthedocs.io/en/latest/pretrained.html).
+The pre-trained hand pose estimation model can be downloaded from [model zoo](https://mmpose.readthedocs.io/en/latest/hand_models.html#).
 Take [onehand10k model](https://download.openmmlab.com/mmpose/top_down/resnet/res50_onehand10k_256x256-e67998f6_20200813.pth) as an example:
 
 ```shell
@@ -48,7 +50,7 @@ Assume that you have already installed [mmdet](https://github.com/open-mmlab/mmd
 
 *Hand Box Model Preparation:* The pre-trained hand box estimation model can be found in [det model zoo](/demo/mmdet_modelzoo.md).
 
-*Hand Pose Model Preparation:* The pre-trained hand pose estimation model can be downloaded from [pose model zoo](https://mmpose.readthedocs.io/en/latest/pretrained.html).
+*Hand Pose Model Preparation:* The pre-trained hand pose estimation model can be downloaded from [pose model zoo](https://mmpose.readthedocs.io/en/latest/hand_models.html#).
 
 ```shell
 python demo/top_down_img_demo_with_mmdet.py \
@@ -78,7 +80,7 @@ Assume that you have already installed [mmdet](https://github.com/open-mmlab/mmd
 
 *Hand Box Model Preparation:* The pre-trained hand box estimation model can be found in [det model zoo](/demo/mmdet_modelzoo.md).
 
-*Hand Pose Model Preparation:* The pre-trained hand pose estimation model can be downloaded from [pose model zoo](https://mmpose.readthedocs.io/en/latest/pretrained.html).
+*Hand Pose Model Preparation:* The pre-trained hand pose estimation model can be downloaded from [pose model zoo](https://mmpose.readthedocs.io/en/latest/hand_models.html#).
 
 ```shell
 python demo/top_down_video_demo_with_mmdet.py \

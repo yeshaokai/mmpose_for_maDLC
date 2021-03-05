@@ -9,8 +9,10 @@ from mmpose.core.evaluation.top_down_eval import keypoints_from_heatmaps
 class TopDownBaseHead(nn.Module):
     """Base class for top-down keypoint heads.
 
-    All top-down keypoint heads should subclass it. All subclass should
-    overwrite:     Methods:`get_loss`, supporting to calculate loss.
+    All top-down keypoint heads should subclass it.
+    All subclass should overwrite:
+
+    Methods:`get_loss`, supporting to calculate loss.
     Methods:`get_accuracy`, supporting to calculate accuracy.
     Methods:`forward`, supporting to forward model.
     Methods:`inference_model`, supporting to inference model.
@@ -34,7 +36,19 @@ class TopDownBaseHead(nn.Module):
     def inference_model(self, **kwargs):
         """Inference function."""
 
-    def decode_keypoints(self, img_metas, output_heatmap):
+    def decode(self, img_metas, output, **kwargs):
+        """Decode keypoints from heatmaps.
+
+        Args:
+            img_metas (list(dict)): Information about data augmentation
+                By default this includes:
+                - "image_file: path to the image file
+                - "center": center of the bbox
+                - "scale": scale of the bbox
+                - "rotation": rotation of the bbox
+                - "bbox_score": score of bbox
+            output (np.ndarray[N, K, H, W]): model predicted heatmaps.
+        """
         batch_size = len(img_metas)
 
         if 'bbox_id' in img_metas[0]:
@@ -42,8 +56,8 @@ class TopDownBaseHead(nn.Module):
         else:
             bbox_ids = None
 
-        c = np.zeros((batch_size, 2))
-        s = np.zeros((batch_size, 2))
+        c = np.zeros((batch_size, 2), dtype=np.float32)
+        s = np.zeros((batch_size, 2), dtype=np.float32)
         image_paths = []
         score = np.ones(batch_size)
         for i in range(batch_size):
@@ -57,7 +71,7 @@ class TopDownBaseHead(nn.Module):
                 bbox_ids.append(img_metas[i]['bbox_id'])
 
         preds, maxvals = keypoints_from_heatmaps(
-            output_heatmap,
+            output,
             c,
             s,
             unbiased=self.test_cfg.get('unbiased_decoding', False),

@@ -9,7 +9,18 @@ If the contents here do not cover your issue, please create an issue using the [
 - **Unable to install xtcocotools**
 
   1. Try to install it using pypi mannually `pip install xtcocotools`.
-  1. If step1 does not work. Try to install it from source.
+  1. If step1 does not work. Try to install it from [source](https://github.com/jin-s13/xtcocoapi).
+
+  ```
+  git clone https://github.com/jin-s13/xtcocoapi
+  cd xtcocoapi
+  python setup.py install
+  ```
+
+- **No matching distribution found for xtcocotools>=1.6**
+
+  1. Install cython by `pip install cython`.
+  1. Install xtcocotools from [source](https://github.com/jin-s13/xtcocoapi).
 
   ```
   git clone https://github.com/jin-s13/xtcocoapi
@@ -89,6 +100,7 @@ If the contents here do not cover your issue, please create an issue using the [
 
   1. set `flip_test=False` in [topdown-res50](/configs/top_down/resnet/coco/res50_coco_256x192.py#L51).
   1. set `post_process='default'` in [topdown-res50](/configs/top_down/resnet/coco/res50_coco_256x192.py#L54).
+  1. use faster human bounding box detector, see [MMDetection](https://mmdetection.readthedocs.io/en/latest/model_zoo.html).
 
   For bottom-up models, try to edit the config file. For example,
 

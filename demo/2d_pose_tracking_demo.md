@@ -1,5 +1,7 @@
 ## 2D Pose Tracking Demo
 
+<img src="https://user-images.githubusercontent.com/11788150/109099201-a93dde00-775d-11eb-9624-f9676fc0e478.gif" width="600px" alt><br>
+
 ### 2D Top-Down Video Human Pose Tracking Demo
 
 We provide a video demo to illustrate the pose tracking results.
@@ -48,7 +50,7 @@ python demo/top_down_video_demo_with_mmtracking.py \
 Examples:
 
 ```shell
-python demo/top_down_pose_tracking_demo_with_mmdet.py \
+python demo/top_down_pose_tracking_demo_with_mmtracking.py \
     demo/mmtracking_cfg/tracktor_faster-rcnn_r50_fpn_4e_mot17-private.py \
     configs/top_down/resnet/coco/res50_coco_256x192.py \
     https://download.openmmlab.com/mmpose/top_down/resnet/res50_coco_256x192-ec54d7f3_20200709.pth \
@@ -64,3 +66,4 @@ For top-down 2D human pose models, try to edit the config file. For example,
 
 1. set `flip_test=False` in [topdown-res50](/configs/top_down/resnet/coco/res50_coco_256x192.py#L51).
 2. set `post_process='default'` in [topdown-res50](/configs/top_down/resnet/coco/res50_coco_256x192.py#L52).
+1. use faster human detector or human tracker, see [MMDetection](https://mmdetection.readthedocs.io/en/latest/model_zoo.html) or [MMTracking](https://github.com/open-mmlab/mmtracking/blob/master/docs/model_zoo.md).

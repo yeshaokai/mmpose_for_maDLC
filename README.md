@@ -4,6 +4,8 @@
 
 ## Introduction
 
+English | [简体中文](README_CN.md)
+
 [![Documentation](https://readthedocs.org/projects/mmpose/badge/?version=latest)](https://mmpose.readthedocs.io/en/latest/?badge=latest)
 [![actions](https://github.com/open-mmlab/mmpose/workflows/build/badge.svg)](https://github.com/open-mmlab/mmpose/actions)
 [![codecov](https://codecov.io/gh/open-mmlab/mmpose/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmpose)
@@ -57,6 +59,7 @@ Supported algorithms:
 <details open>
 <summary>(click to collapse)</summary>
 
+- [x] [DeepPose](configs/top_down/deeppose/README.md) (CVPR'2014)
 - [x] [CPM](configs/top_down/cpm/README.md) (CVPR'2016)
 - [x] [Hourglass](configs/top_down/hourglass/README.md) (ECCV'2016)
 - [x] [SimpleBaseline](configs/top_down/resnet/README.md) (ECCV'2018)
@@ -157,9 +160,15 @@ Please refer to [data_preparation.md](docs/data_preparation.md) for a general kn
 ## Get Started
 
 Please see [getting_started.md](docs/getting_started.md) for the basic usage of MMPose.
-There are also tutorials: [finetune model](tutorials/1_finetune.md),
-[add new dataset](tutorials/2_new_dataset.md), [customize data pipelines](tutorials/3_data_pipeline.md),
-[add new modules](tutorials/4_new_modules.md), [export a model to ONNX](tutorials/5_export_model.md) and [customize runtime settings](tutorials/6_customize_runtime.md).
+There are also tutorials:
+
+- [learn about configs](docs/tutorials/0_config.md)
+- [finetune model](docs/tutorials/1_finetune.md)
+- [add new dataset](docs/tutorials/2_new_dataset.md)
+- [customize data pipelines](docs/tutorials/3_data_pipeline.md)
+- [add new modules](docs/tutorials/4_new_modules.md)
+- [export a model to ONNX](docs/tutorials/5_export_model.md)
+- [customize runtime settings](docs/tutorials/6_customize_runtime.md)
 
 ## FAQ
 
@@ -173,7 +182,7 @@ This project is released under the [Apache 2.0 license](LICENSE).
 
 If you find this project useful in your research, please consider cite:
 
-```latex
+```bibtex
 @misc{mmpose2020,
     title={OpenMMLab Pose Estimation Toolbox and Benchmark},
     author={MMPose Contributors},
@@ -184,7 +193,7 @@ If you find this project useful in your research, please consider cite:
 
 ## Contributing
 
-We appreciate all contributions to improve MMPose. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmpose/blob/master/.github/CONTRIBUTING.md) for the contributing guideline.
+We appreciate all contributions to improve MMPose. Please refer to [CONTRIBUTING.md](.github/CONTRIBUTING.md) for the contributing guideline.
 
 ## Acknowledgement
 

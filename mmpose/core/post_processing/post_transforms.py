@@ -48,6 +48,33 @@ def fliplr_joints(joints_3d, joints_3d_visible, img_width, flip_pairs):
     return joints_3d_flipped, joints_3d_visible_flipped
 
 
+def fliplr_regression(regression, flip_pairs):
+    """Flip human joints horizontally.
+
+    Note:
+        batch_size: N
+        num_keypoint: K
+    Args:
+        regression (np.ndarray([N, K, 2])): Coordinates of keypoints.
+        flip_pairs (list[tuple()]): Pairs of keypoints which are mirrored
+            (for example, left ear -- right ear).
+
+    Returns:
+        tuple: Flipped human joints.
+
+        - regression_flipped (np.ndarray([N, K, 2])): Flipped joints.
+    """
+    regression_flipped = regression.copy()
+    # Swap left-right parts
+    for left, right in flip_pairs:
+        regression_flipped[:, left, :] = regression[:, right, :]
+        regression_flipped[:, right, :] = regression[:, left, :]
+
+    # Flip horizontally
+    regression_flipped[:, :, 0] = 1 - regression_flipped[:, :, 0]
+    return regression_flipped
+
+
 def flip_back(output_flipped, flip_pairs, target_type='GaussianHeatMap'):
     """Flip the flipped heatmaps back to the original form.
 
@@ -104,14 +131,15 @@ def transform_preds(coords, center, scale, output_size, use_udp=False):
         coords (np.ndarray[K, ndims]):
 
             * If ndims=2, corrds are predicted keypoint location.
-            * If ndims=4, corrds are composed of (x, y, tags, scores)
-            * If ndims=5, corrds are composed of (x, y, tags,
-              flipped_tags, scores)
+            * If ndims=4, corrds are composed of (x, y, scores, tags)
+            * If ndims=5, corrds are composed of (x, y, scores, tags,
+              flipped_tags)
 
         center (np.ndarray[2, ]): Center of the bounding box (x, y).
         scale (np.ndarray[2, ]): Scale of the bounding box
             wrt [width, height].
-        output_size (np.ndarray[2, ]): Size of the destination heatmaps.
+        output_size (np.ndarray[2, ] | list(2,)): Size of the
+            destination heatmaps.
         use_udp (bool): Use unbiased data processing
 
     Returns:
@@ -122,7 +150,7 @@ def transform_preds(coords, center, scale, output_size, use_udp=False):
     assert len(scale) == 2
     assert len(output_size) == 2
     if use_udp:
-        # The input scale is normalized by deviding a factor of 200.
+        # The input scale is normalized by dividing a factor of 200.
         # Here is a recover.
         scale = scale * 200.0
         scale_x = scale[0] / (output_size[0] - 1.0)
@@ -153,7 +181,8 @@ def get_affine_transform(center,
         scale (np.ndarray[2, ]): Scale of the bounding box
             wrt [width, height].
         rot (float): Rotation angle (degree).
-        output_size (np.ndarray[2, ]): Size of the destination heatmaps.
+        output_size (np.ndarray[2, ] | list(2,)): Size of the
+            destination heatmaps.
         shift (0-100%): Shift translation ratio wrt the width/height.
             Default (0., 0.).
         inv (bool): Option to inverse the affine transform direction.

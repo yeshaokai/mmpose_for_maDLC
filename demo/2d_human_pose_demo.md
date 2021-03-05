@@ -1,5 +1,7 @@
 ## 2D Human Pose Demo
 
+<img src="https://raw.githubusercontent.com/open-mmlab/mmpose/master/demo/demo_coco.gif" width="600px" alt><br>
+
 ### 2D Human Pose Top-Down Image Demo
 
 #### Using gt human bounding boxes as input
@@ -147,6 +149,7 @@ For top-down models, try to edit the config file. For example,
 
 1. set `flip_test=False` in [topdown-res50](/configs/top_down/resnet/coco/res50_coco_256x192.py#L51).
 1. set `post_process='default'` in [topdown-res50](/configs/top_down/resnet/coco/res50_coco_256x192.py#L52).
+1. use faster human bounding box detector, see [MMDetection](https://mmdetection.readthedocs.io/en/latest/model_zoo.html).
 
 For bottom-up models, try to edit the config file. For example,
 

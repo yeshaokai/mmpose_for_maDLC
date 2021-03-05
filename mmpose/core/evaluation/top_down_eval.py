@@ -12,14 +12,15 @@ def _calc_distances(preds, targets, mask, normalize):
     Note:
         batch_size: N
         num_keypoints: K
+        dimension of keypoints: D (normally, D=2 or D=3)
 
     Args:
-        preds (np.ndarray[N, K, 2]): Predicted keypoint location.
-        targets (np.ndarray[N, K, 2]): Groundtruth keypoint location.
+        preds (np.ndarray[N, K, D]): Predicted keypoint location.
+        targets (np.ndarray[N, K, D]): Groundtruth keypoint location.
         mask (np.ndarray[N, K]): Visibility of the target. False for invisible
             joints, and True for visible. Invisible joints will be ignored for
             accuracy calculation.
-        normalize (np.ndarray[N, 2]): Typical value is heatmap_size
+        normalize (np.ndarray[N, D]): Typical value is heatmap_size
 
     Returns:
         np.ndarray[K, N]: The normalized distances.
@@ -242,8 +243,10 @@ def keypoint_epe(pred, gt, mask):
     Returns:
         float: Average end-point error.
     """
+
     distances = _calc_distances(
-        pred, gt, mask, np.tile(np.array([[1, 1]]), (pred.shape[0], 1)))
+        pred, gt, mask,
+        np.ones((pred.shape[0], pred.shape[2]), dtype=np.float32))
     distance_valid = distances[distances != -1]
     return distance_valid.sum() / max(1, len(distance_valid))
 
@@ -391,6 +394,38 @@ def _gaussian_blur(heatmaps, kernel=11):
             heatmaps[i, j] = dr[border:-border, border:-border].copy()
             heatmaps[i, j] *= origin_max / np.max(heatmaps[i, j])
     return heatmaps
+
+
+def keypoints_from_regression(regression_preds, center, scale, img_size):
+    """Get final keypoint predictions from regression vectors and transform
+    them back to the image.
+
+    Note:
+        batch_size: N
+        num_keypoints: K
+
+    Args:
+        regression_preds (np.ndarray[N, K, 2]): model prediction.
+        center (np.ndarray[N, 2]): Center of the bounding box (x, y).
+        scale (np.ndarray[N, 2]): Scale of the bounding box
+            wrt height/width.
+        img_size (list(img_width, img_height)): model input image size.
+
+
+    Returns:
+        preds (np.ndarray[N, K, 2]): Predicted keypoint location in images.
+        maxvals (np.ndarray[N, K, 1]): Scores (confidence) of the keypoints.
+    """
+    N, K, _ = regression_preds.shape
+    preds, maxvals = regression_preds, np.ones((N, K, 1), dtype=np.float32)
+
+    preds = preds * img_size
+
+    # Transform back to the image
+    for i in range(N):
+        preds[i] = transform_preds(preds[i], center[i], scale[i], img_size)
+
+    return preds, maxvals
 
 
 def keypoints_from_heatmaps(heatmaps,
