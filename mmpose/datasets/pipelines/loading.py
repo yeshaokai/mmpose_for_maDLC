@@ -25,8 +25,10 @@ class LoadImageFromFile:
         """Loading image from file."""
         image_file = results['image_file']
 
-
-        img = mmcv.imread(image_file, self.color_type, self.channel_order)
+        try:
+            img = mmcv.imread(image_file, self.color_type, self.channel_order)
+        except:
+            print ('problematic image {}'.format(image_file))
 
         if img is None:
             raise ValueError('Fail to read {}'.format(image_file))

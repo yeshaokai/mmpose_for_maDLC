@@ -452,6 +452,7 @@ def inference_bottom_up_pose_model(model,
 
         returned_outputs.append(h.layer_outputs)
 
+
         for pred in result['preds']:
             pose_results.append({
                 'keypoints': pred[:, :3],
@@ -479,6 +480,9 @@ def vis_pose_result(model,
         show (bool):  Whether to show the image. Default True.
         out_file (str|None): The filename of the output visualization image.
     """
+
+
+
     if hasattr(model, 'module'):
         model = model.module
 
@@ -524,9 +528,26 @@ def vis_pose_result(model,
                     [5,3]]
         skeleton_len = len(skeleton)
         pose_limb_color = palette[[0,0,0,0,7,7,7,7,9,9,9,9,10,10,10,10,15,15,15,15,16,16,16,16]]
-        kpt_score_thr = 0
+
         pose_kpt_color = palette[range(12)]
+
+    elif dataset == 'BottomUpMarmosetDataset':
+        skeleton = [[1,2],[3,4],[1,3],[3,13],[13,14],[14,5],[5,8],[8,10],
+                    [6,9],[5,6],[13,7],[7,12],[13,5],[5,11]]
+                    
+        skeleton_len = len(skeleton)
+        pose_limb_color = palette[[0,0,0,0,7,7,7,7,9,9,9,9,10,10]]        
+        pose_kpt_color= palette[range(15)]
+        radius = 7
         
+    elif dataset =='BottomUpModelZooDataset':
+        skeleton = [[15,17],[17,19],[16,18],[18,20],[19,8],[20,8],[8,7],[7,6],
+                    [6,1],[1,2],[1,3],[2,3],[2,4],[3,5],[6,13],[6,14],[13,11],
+                    [11,9],[14,12],[12,10]]
+        skeleton_len = len(skeleton)
+        pose_limb_color=palette[[0,0,0,0,7,7,7,7,9,9,9,9,10,10,10,10,15,15,15,15]]
+        pose_kpt_color =palette[range(20)]
+        radius = 10  
     elif dataset == 'TopDownCocoWholeBodyDataset':
         # show the results
         skeleton = [[16, 14], [14, 12], [17, 15], [15, 13], [12, 13], [6, 12],

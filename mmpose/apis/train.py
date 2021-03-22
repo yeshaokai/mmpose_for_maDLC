@@ -78,7 +78,7 @@ def train_model(model,
 
     # build runner
     optimizer = build_optimizers(model, cfg.optimizer)
-
+    print (optimizer)
     runner = EpochBasedRunner(
         model,
         optimizer=optimizer,

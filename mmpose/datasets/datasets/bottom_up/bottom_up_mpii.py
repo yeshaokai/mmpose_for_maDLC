@@ -12,31 +12,32 @@ from .bottom_up_base_dataset import BottomUpBaseDataset
 
 
 @DATASETS.register_module()
-class BottomUpCocoDataset(BottomUpBaseDataset):
+class BottomUpMPIIDataset(BottomUpBaseDataset):
     """COCO dataset for bottom-up pose estimation.
 
     The dataset loads raw features and apply specified transforms
     to return a dict containing the image tensors and other information.
 
-    COCO keypoint indexes::
+    MPII keypoint indexes::
 
-        0: 'nose',
-        1: 'left_eye',
-        2: 'right_eye',
-        3: 'left_ear',
-        4: 'right_ear',
-        5: 'left_shoulder',
-        6: 'right_shoulder',
-        7: 'left_elbow',
-        8: 'right_elbow',
-        9: 'left_wrist',
+        0: 'right_ankle'
+        1: 'right_knee',
+        2: 'right_hip',
+        3: 'left_hip',
+        4: 'left_knee',
+        5: 'left_ankle',
+        6: 'pelvis',
+        7: 'thorax',
+        8: 'upper_neck',
+        9: 'head_top',
         10: 'right_wrist',
-        11: 'left_hip',
-        12: 'right_hip',
-        13: 'left_knee',
-        14: 'right_knee',
-        15: 'left_ankle',
-        16: 'right_ankle'
+        11: 'right_elbow',
+        12: 'right_shoulder',
+        13: 'left_shoulder',
+        14: 'left_elbow',
+        15: 'left_wrist'
+
+
 
     Args:
         ann_file (str): Path to the annotation file.
@@ -57,26 +58,30 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
         super().__init__(ann_file, img_prefix, data_cfg, pipeline, test_mode)
 
         self.ann_info['flip_index'] = [
-            0, 2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15
+            5, 4, 3, 2, 1, 0, 6, 7, 8, 9, 15, 14, 13, 12, 11, 10            
         ]
 
         self.ann_info['use_different_joint_weights'] = False
         self.ann_info['joint_weights'] = np.array(
             [
-                1., 1., 1., 1., 1., 1., 1., 1.2, 1.2, 1.5, 1.5, 1., 1., 1.2,
-                1.2, 1.5, 1.5
+                1.5, 1.2, 1., 1., 1.2, 1.5, 1., 1., 1., 1., 1.5, 1.2, 1., 1.,
+                1.2, 1.5
             ],
             dtype=np.float32).reshape((self.ann_info['num_joints'], 1))
 
         # 'https://github.com/cocodataset/cocoapi/blob/master/PythonAPI/'
         # 'pycocotools/cocoeval.py#L523'
+
         self.sigmas = np.array([
-            .26, .25, .25, .35, .35, .79, .79, .72, .72, .62, .62, 1.07, 1.07,
-            .87, .87, .89, .89
+            .89, .83, 1.07, 1.07, .83, .89, .26, .26, .26, .26, .62, .72, 1.79,
+            1.79, .72, .62
         ]) / 10.0
+        #self.sigmas = np.ones(16)*16/10.0
 
         self.coco = COCO(ann_file)
 
+
+        
         cats = [
             cat['name'] for cat in self.coco.loadCats(self.coco.getCatIds())
         ]
@@ -89,17 +94,16 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
             for cls in self.classes[1:])
         self.img_ids = self.coco.getImgIds()
 
-        
         if not test_mode:
             self.img_ids = [
                 img_id for img_id in self.img_ids
-                if len(self.coco.getAnnIds(imgIds=img_id, iscrowd=None)) > 0
             ]
-
-
         self.num_images = len(self.img_ids)
+
+
+        
         self.id2name, self.name2id = self._get_mapping_id_name(self.coco.imgs)
-        self.dataset_name = 'coco'
+        self.dataset_name = 'mpii'
 
         print(f'=> num_images: {self.num_images}')
 
@@ -154,9 +158,11 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
         db_rec['dataset'] = self.dataset_name
         db_rec['image_file'] = os.path.join(self.img_prefix,
                                             self.id2name[img_id])
+
         db_rec['mask'] = mask_list
         db_rec['joints'] = joints_list
 
+        
         return db_rec
 
     def _get_joints(self, anno):
@@ -171,12 +177,8 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
                               dtype=np.float32)
 
         for i, obj in enumerate(anno):
-            try:
-                joints[i, :self.ann_info['num_joints'], :3] = \
-                                                              np.array(obj['keypoints']).reshape([-1, 3])
-            except:
-                print ('+1')
-                continue                
+            joints[i, :self.ann_info['num_joints'], :3] = \
+                np.array(obj['keypoints']).reshape([-1, 3])
             if self.ann_info['scale_aware_sigma']:
                 # get person box
                 box = obj['bbox']
@@ -210,8 +212,10 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
                     for rle in rles:
                         m += xtcocotools.mask.decode(rle)
 
-
         return m < 0.5
+
+    #def evaluate(self, outputs, res_folder, metric='PCKh', **kwargs):
+        
 
     def evaluate(self, outputs, res_folder, metric='mAP', **kwargs):
         """Evaluate coco keypoint results. The pose prediction results will be
@@ -258,7 +262,8 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
         # iterate over images
         for idx, _preds in enumerate(preds):
             str_image_path = image_paths[idx]
-            image_id = self.name2id[os.path.basename(str_image_path)]
+
+            image_id = self.name2id[os.path.join('images',os.path.basename(str_image_path))]
             # iterate over people
             for idx_person, kpt in enumerate(_preds):
                 # use bbox area

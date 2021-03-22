@@ -278,9 +278,12 @@ class JointsEncoder:
         visible_kpts = np.zeros((self.max_num_people, self.num_joints, 2),
                                 dtype=np.float32)
         output_res = self.output_res
+        sum_tot_miss = 0
+        sum_all = 0
         for i in range(len(joints)):
             tot = 0
             for idx, pt in enumerate(joints[i]):
+                sum_all+=1
                 x, y = int(pt[0]), int(pt[1])
                 if (pt[2] > 0 and 0 <= y < self.output_res
                         and 0 <= x < self.output_res):
@@ -290,6 +293,9 @@ class JointsEncoder:
                     else:
                         visible_kpts[i][tot] = (y * output_res + x, 1)
                     tot += 1
+                else:
+                    sum_tot_miss+=1
+        #print ('miss_ratio:{}'.format(sum_tot_miss*1.0/sum_all))
         return visible_kpts
 
 
@@ -308,7 +314,7 @@ class BottomUpRandomFlip:
         """Perform data augmentation with random image flip."""
         image, mask, joints = results['img'], results['mask'], results[
             'joints']
-        print (joints)
+
         self.flip_index = results['ann_info']['flip_index']
         self.output_size = results['ann_info']['heatmap_size']
 
@@ -388,6 +394,7 @@ class BottomUpRandomAffine:
         image, mask, joints = results['img'], results['mask'], results[
             'joints']
 
+
         self.input_size = results['ann_info']['image_size']
         self.output_size = results['ann_info']['heatmap_size']
 
@@ -411,9 +418,13 @@ class BottomUpRandomAffine:
             raise ValueError('Unknown scale type: {}'.format(self.scale_type))
         aug_scale = np.random.random() * (self.max_scale - self.min_scale) \
             + self.min_scale
+
+
+        
         scale *= aug_scale
         aug_rot = (np.random.random() * 2 - 1) * self.max_rotation
 
+        
         if self.trans_factor > 0:
             dx = np.random.randint(-self.trans_factor * scale / 200.0,
                                    self.trans_factor * scale / 200.0)
@@ -472,6 +483,7 @@ class BottomUpRandomAffine:
 
         results['img'], results['mask'], results[
             'joints'] = image, mask, joints
+
 
         return results
 
