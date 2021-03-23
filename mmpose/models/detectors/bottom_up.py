@@ -41,6 +41,8 @@ class BottomUp(BasePose):
 
         self.backbone = builder.build_backbone(backbone)
 
+        
+        
         if keypoint_head is not None:
 
             if 'loss_keypoint' not in keypoint_head and loss_pose is not None:
@@ -167,6 +169,7 @@ class BottomUp(BasePose):
         if self.with_keypoint:
             keypoint_losses = self.keypoint_head.get_loss(
                 output, targets, masks, joints)
+
             losses.update(keypoint_losses)
 
         return losses
@@ -248,6 +251,8 @@ class BottomUp(BasePose):
                 base_size,
                 align_corners=self.use_udp)
 
+            
+            
             aggregated_heatmaps, tags_list = aggregate_results(
                 s,
                 aggregated_heatmaps,
@@ -269,6 +274,9 @@ class BottomUp(BasePose):
                                             self.test_cfg['adjust'],
                                             self.test_cfg['refine'])
 
+
+
+        
         preds = get_group_preds(
             grouped,
             center,
@@ -276,6 +284,8 @@ class BottomUp(BasePose):
                     aggregated_heatmaps.size(2)],
             use_udp=self.use_udp)
 
+
+        
         image_paths = []
         image_paths.append(img_metas['image_file'])
 
@@ -285,6 +295,9 @@ class BottomUp(BasePose):
             output_heatmap = None
 
         result['preds'] = preds
+
+                     
+        
         result['scores'] = scores
         result['image_paths'] = image_paths
         result['output_heatmap'] = output_heatmap
@@ -329,16 +342,26 @@ class BottomUp(BasePose):
         Returns:
             Tensor: Visualized image only if not `show` or `out_file`
         """
-
+        image_path = img
         img = mmcv.imread(img)
         img = img.copy()
         img_h, img_w, _ = img.shape
 
+
+        
         pose_result = []
         for res in result:
             pose_result.append(res['keypoints'])
 
-        for _, kpts in enumerate(pose_result):
+            
+
+
+
+
+
+            
+        for animal_id, kpts in enumerate(pose_result):
+
             # draw each point on image
             if pose_kpt_color is not None:
                 assert len(pose_kpt_color) == len(kpts)
@@ -360,7 +383,8 @@ class BottomUp(BasePose):
                                 0,
                                 dst=img)
                         else:
-                            r, g, b = pose_kpt_color[kid]
+                            #r, g, b = pose_kpt_color[kid]
+                            r, g, b = pose_kpt_color[animal_id+2]
                             cv2.circle(img, (int(x_coord), int(y_coord)),
                                        radius, (int(r), int(g), int(b)), -1)
 
@@ -406,16 +430,21 @@ class BottomUp(BasePose):
                                 0,
                                 dst=img)
                         else:
-                            cv2.line(
-                                img,
-                                pos1,
-                                pos2, (int(r), int(g), int(b)),
-                                thickness=thickness)
+                            pass
+                            #cv2.line(
+                            #    img,
+                            #    pos1,
+                            #    pos2, (int(r), int(g), int(b)),
+                            #    thickness=thickness)
+
 
         if show:
             imshow(img, win_name, wait_time)
-
         if out_file is not None:
-            imwrite(img, out_file)
+            image_path = image_path.split('/')[-1]
+            imwrite(img,'output_images/{}'.format(image_path))
+            
+        #if out_file is not None:
+        #    imwrite(img, out_file)
 
         return img

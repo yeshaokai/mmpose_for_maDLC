@@ -37,7 +37,7 @@ def main():
         args.pose_config, args.pose_checkpoint, device=args.device.lower())
 
     dataset = pose_model.cfg.data['test']['type']
-    assert (dataset == 'BottomUpCocoDataset')
+
 
     cap = cv2.VideoCapture(args.video_path)
 
@@ -73,6 +73,7 @@ def main():
             img,
             return_heatmap=return_heatmap,
             outputs=output_layer_names)
+
 
         # show the results
         vis_img = vis_pose_result(

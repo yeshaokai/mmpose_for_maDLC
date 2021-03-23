@@ -35,6 +35,7 @@ def init_pose_model(config, checkpoint=None, device='cuda:0'):
     model = build_posenet(config.model)
     if checkpoint is not None:
         # load model checkpoint
+
         load_checkpoint(model, checkpoint, map_location=device)
     # save the config in the model for convenience
     model.cfg = config
@@ -150,6 +151,7 @@ def _inference_single_pose_model(model,
 
     Args:
         model (nn.Module): The loaded pose model.
+
         img_or_path (str | np.ndarray): Image filename or loaded image.
         bbox (list | np.ndarray): Bounding boxes (with scores),
             shaped (4, ) or (5, ). (left, top, width, height, [score])
@@ -281,6 +283,7 @@ def _inference_single_pose_model(model,
             img_metas=data['img_metas'],
             return_loss=False,
             return_heatmap=return_heatmap)
+
 
     return result['preds'][0], result['output_heatmap']
 
@@ -418,7 +421,8 @@ def inference_bottom_up_pose_model(model,
             'num_joints':
             cfg.data_cfg['num_joints'],
             'flip_index':
-            [0, 2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15],
+            #[0, 2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15],
+            [5, 4, 3, 2, 1, 0, 6, 7, 8, 9, 15, 14, 13, 12, 11, 10],    
         }
     }
 
@@ -434,16 +438,20 @@ def inference_bottom_up_pose_model(model,
     with OutputHook(model, outputs=outputs, as_tensor=False) as h:
         # forward the model
         with torch.no_grad():
+
             result = model(
                 img=data['img'],
                 img_metas=data['img_metas'],
                 return_loss=False,
                 return_heatmap=return_heatmap)
 
+
+
         if return_heatmap:
             h.layer_outputs['heatmap'] = result['output_heatmap']
 
         returned_outputs.append(h.layer_outputs)
+
 
         for pred in result['preds']:
             pose_results.append({
@@ -472,6 +480,9 @@ def vis_pose_result(model,
         show (bool):  Whether to show the image. Default True.
         out_file (str|None): The filename of the output visualization image.
     """
+
+
+
     if hasattr(model, 'module'):
         model = model.module
 
@@ -499,6 +510,44 @@ def vis_pose_result(model,
             16, 16, 16, 16, 16, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 0, 0
         ]]
 
+
+    elif dataset == 'BottomUpMPIIDataset':
+        skeleton = [[0, 1], [1, 2], [2, 6], [7, 12], [12, 11], [11, 10], [5, 4], [4, 3], [3, 6], [7, 13], [13, 14], [14, 15], [6, 7], [7, 8], [8, 9]]
+        pose_limb_color = palette[[
+            0, 0, 0, 0, 7, 7, 7, 9, 9, 9, 9, 9, 15, 15, 15,
+        ]] # 15
+        pose_kpt_color = palette[[
+            15, 15, 15, 15, 15, 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 0
+        ]]
+
+    elif dataset == 'BottomUp3MouseDataset':
+        skeleton = [[1,2],[1,3],[1,4],[4,5],[5,6],[6,6],
+                    [6,7],[7,8],[4,7],[8,9],[9,10],[10,11],
+                    [9,11],[8,2],[8,3],[10,2],[10,3],
+                    [7,9],[7,11],[1,5],[4,7],[5,9],[5,2],
+                    [5,3]]
+        skeleton_len = len(skeleton)
+        pose_limb_color = palette[[0,0,0,0,7,7,7,7,9,9,9,9,10,10,10,10,15,15,15,15,16,16,16,16]]
+
+        pose_kpt_color = palette[range(12)]
+
+    elif dataset == 'BottomUpMarmosetDataset':
+        skeleton = [[1,2],[3,4],[1,3],[3,13],[13,14],[14,5],[5,8],[8,10],
+                    [6,9],[5,6],[13,7],[7,12],[13,5],[5,11]]
+                    
+        skeleton_len = len(skeleton)
+        pose_limb_color = palette[[0,0,0,0,7,7,7,7,9,9,9,9,10,10]]        
+        pose_kpt_color= palette[range(15)]
+        radius = 7
+        
+    elif dataset =='BottomUpModelZooDataset':
+        skeleton = [[15,17],[17,19],[16,18],[18,20],[19,8],[20,8],[8,7],[7,6],
+                    [6,1],[1,2],[1,3],[2,3],[2,4],[3,5],[6,13],[6,14],[13,11],
+                    [11,9],[14,12],[12,10]]
+        skeleton_len = len(skeleton)
+        pose_limb_color=palette[[0,0,0,0,7,7,7,7,9,9,9,9,10,10,10,10,15,15,15,15]]
+        pose_kpt_color =palette[range(20)]
+        radius = 10  
     elif dataset == 'TopDownCocoWholeBodyDataset':
         # show the results
         skeleton = [[16, 14], [14, 12], [17, 15], [15, 13], [12, 13], [6, 12],
@@ -562,6 +611,9 @@ def vis_pose_result(model,
         pose_limb_color = palette[[16] * 14 + [19] * 13]
         pose_kpt_color = palette[[16] * 14 + [0] * 26]
 
+
+
+        
     elif dataset in ('OneHand10KDataset', 'FreiHandDataset',
                      'PanopticDataset'):
         skeleton = [[1, 2], [2, 3], [3, 4], [4, 5], [1, 6], [6, 7], [7, 8],
@@ -629,7 +681,7 @@ def vis_pose_result(model,
 
     else:
         raise NotImplementedError()
-
+    
     img = model.show_result(
         img,
         result,

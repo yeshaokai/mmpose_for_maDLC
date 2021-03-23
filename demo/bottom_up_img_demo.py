@@ -36,7 +36,7 @@ def main():
 
     args = parser.parse_args()
 
-    assert args.show or (args.out_img_root != '')
+    #assert args.show or (args.out_img_root != '')
 
     coco = COCO(args.json_file)
     # build the pose model from a config file and a checkpoint file
@@ -44,7 +44,8 @@ def main():
         args.pose_config, args.pose_checkpoint, device=args.device.lower())
 
     dataset = pose_model.cfg.data['test']['type']
-    assert (dataset == 'BottomUpCocoDataset')
+    print (dataset)
+    #assert (dataset == 'BottomUpCocoDataset')
 
     img_keys = list(coco.imgs.keys())
 
@@ -57,16 +58,23 @@ def main():
     # process each image
     for i in range(len(img_keys)):
         image_id = img_keys[i]
+
         image = coco.loadImgs(image_id)[0]
         image_name = os.path.join(args.img_root, image['file_name'])
 
+        print (image_name)
         # test a single image, with a list of bboxes.
+
+        
+        
         pose_results, returned_outputs = inference_bottom_up_pose_model(
             pose_model,
             image_name,
             return_heatmap=return_heatmap,
             outputs=output_layer_names)
 
+
+        
         if args.out_img_root == '':
             out_file = None
         else:

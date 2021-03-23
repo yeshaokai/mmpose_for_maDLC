@@ -94,7 +94,7 @@ def main():
     if args.gpu_ids is not None:
         cfg.gpu_ids = args.gpu_ids
     else:
-        cfg.gpu_ids = range(1) if args.gpus is None else range(args.gpus)
+        cfg.gpu_ids = [2]#range(1) if args.gpus is None else range(args.gpus)
 
     if args.autoscale_lr:
         # apply the linear scaling rule (https://arxiv.org/abs/1706.02677)
@@ -139,7 +139,8 @@ def main():
 
     model = build_posenet(cfg.model)
     datasets = [build_dataset(cfg.data.train)]
-
+    
+    
     if len(cfg.workflow) == 2:
         val_dataset = copy.deepcopy(cfg.data.val)
         val_dataset.pipeline = cfg.data.train.pipeline

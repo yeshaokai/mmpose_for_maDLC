@@ -31,6 +31,9 @@ class BottomUpBaseDataset(Dataset):
                  pipeline,
                  test_mode=False):
 
+
+
+        
         self.image_info = {}
         self.ann_info = {}
 
@@ -66,6 +69,7 @@ class BottomUpBaseDataset(Dataset):
 
     def prepare_train_img(self, idx):
         """Prepare image for training given the index."""
+
         results = copy.deepcopy(self._get_single(idx))
         results['ann_info'] = self.ann_info
         return self.pipeline(results)
@@ -78,7 +82,10 @@ class BottomUpBaseDataset(Dataset):
 
     def __getitem__(self, idx):
         """Get the sample for either training or testing given index."""
+        
+        
         if self.test_mode:
             return self.prepare_test_img(idx)
+
 
         return self.prepare_train_img(idx)

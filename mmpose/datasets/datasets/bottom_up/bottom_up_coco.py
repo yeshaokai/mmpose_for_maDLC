@@ -88,11 +88,15 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
             (self._class_to_coco_ind[cls], self._class_to_ind[cls])
             for cls in self.classes[1:])
         self.img_ids = self.coco.getImgIds()
+
+        
         if not test_mode:
             self.img_ids = [
                 img_id for img_id in self.img_ids
                 if len(self.coco.getAnnIds(imgIds=img_id, iscrowd=None)) > 0
             ]
+
+
         self.num_images = len(self.img_ids)
         self.id2name, self.name2id = self._get_mapping_id_name(self.coco.imgs)
         self.dataset_name = 'coco'
@@ -167,8 +171,12 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
                               dtype=np.float32)
 
         for i, obj in enumerate(anno):
-            joints[i, :self.ann_info['num_joints'], :3] = \
-                np.array(obj['keypoints']).reshape([-1, 3])
+            try:
+                joints[i, :self.ann_info['num_joints'], :3] = \
+                                                              np.array(obj['keypoints']).reshape([-1, 3])
+            except:
+                print ('+1')
+                continue                
             if self.ann_info['scale_aware_sigma']:
                 # get person box
                 box = obj['bbox']
@@ -201,6 +209,7 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
                         img_info['width'])
                     for rle in rles:
                         m += xtcocotools.mask.decode(rle)
+
 
         return m < 0.5
 

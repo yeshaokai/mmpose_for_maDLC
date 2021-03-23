@@ -17,6 +17,7 @@ from .shufflenet_v1 import ShuffleNetV1
 from .shufflenet_v2 import ShuffleNetV2
 from .tcn import TCN
 from .vgg import VGG
+from .resnet_swav import ResNet_SWAV
 
 __all__ = [
     'AlexNet', 'HourglassNet', 'HRNet', 'MobileNetV2', 'MobileNetV3', 'RegNet',

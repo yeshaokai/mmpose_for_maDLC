@@ -1,10 +1,10 @@
 log_level = 'INFO'
-load_from = None
+load_from = 'checkpoints/res50_coco_512x512-5521bead_20200816.pth'
 resume_from = None
 dist_params = dict(backend='nccl')
 workflow = [('train', 1)]
-checkpoint_config = dict(interval=50)
-evaluation = dict(interval=50, metric='mAP', key_indicator='AP')
+checkpoint_config = dict(interval=4)
+evaluation = dict(interval=1, metric='mAP', key_indicator='AP')
 
 optimizer = dict(
     type='Adam',
@@ -88,7 +88,7 @@ model = dict(
         ignore_too_much=False,
         adjust=True,
         refine=True,
-        flip_test=True))
+        flip_test=False))
 
 train_pipeline = [
     dict(type='LoadImageFromFile'),
@@ -139,8 +139,35 @@ val_pipeline = [
 test_pipeline = val_pipeline
 
 data_root = 'data/coco'
+
+'''
 data = dict(
-    samples_per_gpu=24,
+    samples_per_gpu=12,
+    workers_per_gpu=1,
+    train=dict(
+        type='BottomUpCocoDataset',
+        ann_file=f'{data_root}/annotations/person_keypoints_train2017.json',
+        img_prefix=f'{data_root}/train2017/',
+        data_cfg=data_cfg,
+        pipeline=train_pipeline),
+    val=dict(
+        type='BottomUpCocoDataset',
+        ann_file=f'{data_root}/annotations/person_keypoints_val2017.json',
+        img_prefix=f'{data_root}/val2017/',
+        data_cfg=data_cfg,
+        pipeline=val_pipeline),
+    test=dict(
+        type='BottomUpCocoDataset',
+        ann_file=f'{data_root}/annotations/person_keypoints_val2017.json',
+        img_prefix=f'{data_root}/val2017/',
+        data_cfg=data_cfg,
+        pipeline=val_pipeline),
+)
+'''
+
+
+data = dict(
+    samples_per_gpu=12,
     workers_per_gpu=1,
     train=dict(
         type='BottomUpCocoDataset',
