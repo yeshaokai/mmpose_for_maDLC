@@ -22,6 +22,10 @@ for shuffle in [0,1,2]:
     img_2_imgid = {}
 
     annotations = all_data['annotations']
+
+    for anno in annotations:
+        anno['category_id'] = 1
+    
     images = all_data['images']
     categories = all_data['categories']
 

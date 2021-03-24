@@ -77,7 +77,7 @@ class BottomUp3MouseDataset(BottomUpCocoDataset):
         self.ann_info['joint_weights'] = np.ones(12)
         
         # Adapted from COCO dataset
-        self.sigmas = np.ones(12)*0.072
+        self.sigmas = np.ones(12)*0.1
         
 
         self.coco = COCO(ann_file)

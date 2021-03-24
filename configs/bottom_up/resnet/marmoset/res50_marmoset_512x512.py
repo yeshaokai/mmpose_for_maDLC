@@ -5,8 +5,8 @@ load_from = 'checkpoints/res50_coco_512x512-5521bead_20200816.pth'
 resume_from = None
 dist_params = dict(backend='nccl')
 workflow = [('train', 1)]
-checkpoint_config = dict(interval=50)
-evaluation = dict(interval=50, metric='mAP', key_indicator='AP')
+checkpoint_config = dict(interval=100)
+evaluation = dict(interval=10, metric='mAP', key_indicator='AP')
 
 sigma = 2
 
@@ -21,8 +21,8 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=50,
     warmup_ratio=0.001,
-    step=[400, 600])
-total_epochs = 1000
+    step=[200, 400])
+total_epochs = 500
 log_config = dict(
     interval=50,
     hooks=[
@@ -75,7 +75,7 @@ model = dict(
         img_size=data_cfg['image_size']),
     test_cfg=dict(
         num_joints=channel_cfg['dataset_joints'],
-        max_num_people=2,
+        max_num_people=3,
         scale_factor=[1],
         with_heatmaps=[True],
         with_ae=[True],
@@ -86,7 +86,7 @@ model = dict(
         detection_threshold=1e-1,
         tag_threshold=1,
         use_detection_val=True,
-        ignore_too_much=True,
+        ignore_too_much=False,
         adjust=True,
         refine=True,
         flip_test=False))
@@ -108,7 +108,7 @@ train_pipeline = [
     dict(
         type='BottomUpGenerateTarget',
         sigma=sigma,
-        max_num_people=2,
+        max_num_people=3,
     ),
     dict(
         type='Collect',
@@ -145,7 +145,7 @@ data_root = 'data/marmoset'
 
 
 data = dict(
-    samples_per_gpu=12,
+    samples_per_gpu=32,
     workers_per_gpu=1,
     train=dict(
         type='BottomUpMarmosetDataset',
@@ -155,13 +155,13 @@ data = dict(
         pipeline=train_pipeline),
     val=dict(
         type='BottomUpMarmosetDataset',
-        ann_file=f'{data_root}/annotations/marmoset_keypoints.json',
+        ann_file=f'{data_root}/annotations/dlc_shuffle0_val.json',
         img_prefix=f'{data_root}/images',
         data_cfg=data_cfg,
         pipeline=val_pipeline),
     test=dict(
         type='BottomUpMarmosetDataset',
-        ann_file=f'{data_root}/annotations/marmoset_keypoints.json',
+        ann_file=f'{data_root}/annotations/dlc_shuffle0_val.json',
         img_prefix=f'{data_root}/images',
         data_cfg=data_cfg,
         pipeline=val_pipeline),

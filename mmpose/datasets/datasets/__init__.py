@@ -9,11 +9,12 @@ from .hand import (FreiHandDataset, InterHand2DDataset, InterHand3DDataset,
                    OneHand10KDataset, PanopticDataset)
 from .mesh import (MeshAdversarialDataset, MeshH36MDataset, MeshMixDataset,
                    MoshDataset)
+
 from .top_down import (TopDownAicDataset, TopDownCocoDataset,
                        TopDownCocoWholeBodyDataset, TopDownCrowdPoseDataset,
                        TopDownJhmdbDataset, TopDownMhpDataset,
                        TopDownMpiiDataset, TopDownMpiiTrbDataset,
-                       TopDownOCHumanDataset, TopDownPoseTrack18Dataset)
+                       TopDownOCHumanDataset)
 
 __all__ = [
     'TopDownCocoDataset', 'BottomUpCocoDataset', 'BottomUpMhpDataset',
@@ -24,7 +25,7 @@ __all__ = [
     'MeshMixDataset', 'MoshDataset', 'MeshAdversarialDataset',
     'TopDownCrowdPoseDataset', 'BottomUpCrowdPoseDataset',
     'TopDownFreiHandDataset', 'TopDownOneHand10KDataset',
-    'TopDownPanopticDataset', 'TopDownPoseTrack18Dataset',
+    'TopDownPanopticDataset', 
     'TopDownJhmdbDataset', 'TopDownMhpDataset', 'DeepFashionDataset',
     'Face300WDataset', 'FaceAFLWDataset', 'FaceWFLWDataset', 'FaceCOFWDataset'
 ]

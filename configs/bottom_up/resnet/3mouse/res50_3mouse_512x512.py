@@ -5,24 +5,24 @@ load_from = 'checkpoints/res50_coco_512x512-5521bead_20200816.pth'
 resume_from = None
 dist_params = dict(backend='nccl')
 workflow = [('train', 1)]
-checkpoint_config = dict(interval=50)
-evaluation = dict(interval=50, metric='mAP', key_indicator='AP')
+checkpoint_config = dict(interval=10)
+evaluation = dict(interval=10, metric='mAP', key_indicator='AP')
 
 sigma = 2
 
 optimizer = dict(
     type='Adam',
-    lr=1e-3
+    lr=0.0015
 )
 optimizer_config = dict(grad_clip=None)
 # learning policy
 lr_config = dict(
     policy='step',
     warmup='linear',
-    warmup_iters=100,
+    warmup_iters=10,
     warmup_ratio=0.001,
-    step=[1000, 2500])
-total_epochs = 3000
+    step=[200, 500])
+total_epochs = 1000
 log_config = dict(
     interval=50,
     hooks=[
@@ -77,7 +77,7 @@ model = dict(
         img_size=data_cfg['image_size']),
     test_cfg=dict(
         num_joints=channel_cfg['dataset_joints'],
-        max_num_people=3,
+        max_num_people=10,
         scale_factor=[1],
         with_heatmaps=[True],
         with_ae=[True],
@@ -88,7 +88,7 @@ model = dict(
         detection_threshold=1e-1,
         tag_threshold=1,
         use_detection_val=True,
-        ignore_too_much=True,
+        ignore_too_much=False,
         adjust=True,
         refine=True,
         flip_test=False))
@@ -111,7 +111,7 @@ train_pipeline = [
     dict(
         type='BottomUpGenerateTarget',
         sigma=sigma,
-        max_num_people=3,
+        max_num_people=10,
 
     ),
     dict(
@@ -149,7 +149,7 @@ data_root = 'data/3mouse'
 
 
 data = dict(
-    samples_per_gpu=12,
+    samples_per_gpu=32,
     workers_per_gpu=2,
     train=dict(
         type='BottomUp3MouseDataset',

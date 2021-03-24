@@ -76,7 +76,7 @@ class BottomUpMarmosetDataset(BottomUpCocoDataset):
         self.ann_info['joint_weights'] = np.ones(15)
         
         # Adapted from COCO dataset
-        self.sigmas = np.ones(15)
+        self.sigmas = np.ones(15)*0.1
         
 
         self.coco = COCO(ann_file)
@@ -99,7 +99,7 @@ class BottomUpMarmosetDataset(BottomUpCocoDataset):
             ]
         self.num_images = len(self.img_ids)
         self.id2name, self.name2id = self._get_mapping_id_name(self.coco.imgs)
-        self.dataset_name = '3mouse'
+        self.dataset_name = 'marmoset'
 
         print(f'=> num_images: {self.num_images}')
 

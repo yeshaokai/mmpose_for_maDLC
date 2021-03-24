@@ -3,8 +3,8 @@ load_from = 'checkpoints/hrnet_w32_coco_512x512-bcb8c247_20200816.pth'
 resume_from = None
 dist_params = dict(backend='nccl')
 workflow = [('train', 1)]
-checkpoint_config = dict(interval=50)
-evaluation = dict(interval=50, metric='mAP', key_indicator='AP')
+checkpoint_config = dict(interval=100)
+evaluation = dict(interval=10, metric='mAP', key_indicator='AP')
 
 optimizer = dict(
     type='Adam',
@@ -17,8 +17,8 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=10,
     warmup_ratio=0.001,
-    step=[1000, 2500])
-total_epochs = 3000
+    step=[200, 500])
+total_epochs = 1000
 log_config = dict(
     interval=50,
     hooks=[
@@ -112,7 +112,7 @@ model = dict(
         detection_threshold=0.1,
         tag_threshold=1,
         use_detection_val=True,
-        ignore_too_much=True,
+        ignore_too_much=False,
         adjust=True,
         refine=True,
         flip_test=False))
@@ -178,13 +178,13 @@ data = dict(
         pipeline=train_pipeline),
     val=dict(
         type='BottomUp3MouseDataset',
-        ann_file=f'{data_root}/annotations/mouse_keypoints.json',
+        ann_file=f'{data_root}/annotations/dlc_shuffle0_val.json',
         img_prefix=f'{data_root}/images/',
         data_cfg=data_cfg,
         pipeline=val_pipeline),
     test=dict(
         type='BottomUp3MouseDataset',
-        ann_file=f'{data_root}/annotations/mouse_keypoints.json',
+        ann_file=f'{data_root}/annotations/dlc_shuffle0_val.json',
         img_prefix=f'{data_root}/images/',
         data_cfg=data_cfg,
         pipeline=val_pipeline),

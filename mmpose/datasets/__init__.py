@@ -10,7 +10,7 @@ from .datasets import (BottomUpCocoDataset, BottomUpCrowdPoseDataset,
                        TopDownMhpDataset, TopDownMpiiDataset,
                        TopDownMpiiTrbDataset, TopDownOCHumanDataset,
                        TopDownOneHand10KDataset, TopDownPanopticDataset,
-                       TopDownPoseTrack18Dataset)
+)
 from .pipelines import Compose
 from .registry import DATASETS, PIPELINES
 from .samplers import DistributedSampler

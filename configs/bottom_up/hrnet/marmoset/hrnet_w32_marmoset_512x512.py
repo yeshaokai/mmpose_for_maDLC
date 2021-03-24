@@ -19,8 +19,8 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=50,
     warmup_ratio=0.001,
-    step=[400, 600])
-total_epochs = 1000
+    step=[200, 400])
+total_epochs = 500
 log_config = dict(
     interval=50,
     hooks=[
@@ -31,10 +31,10 @@ log_config = dict(
 channel_cfg = dict(
     dataset_joints=15,
     dataset_channel=[
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+        range(15)
     ],
     inference_channel=[
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+        range(15)
     ])
 
 data_cfg = dict(
@@ -106,7 +106,7 @@ model = dict(
         img_size=data_cfg['image_size']),
     test_cfg=dict(
         num_joints=channel_cfg['dataset_joints'],
-        max_num_people=2,
+        max_num_people=3,
         scale_factor=[1],
         with_heatmaps=[True],
         with_ae=[True],
@@ -117,7 +117,7 @@ model = dict(
         detection_threshold=0.1,
         tag_threshold=1,
         use_detection_val=True,
-        ignore_too_much=True,
+        ignore_too_much=False,
         adjust=True,
         refine=True,
         flip_test=False))
@@ -139,7 +139,7 @@ train_pipeline = [
     dict(
         type='BottomUpGenerateTarget',
         sigma=2,
-        max_num_people=2,
+        max_num_people=3,
     ),
     dict(
         type='Collect',
@@ -172,7 +172,7 @@ test_pipeline = val_pipeline
 
 data_root = 'data/marmoset'
 data = dict(
-    samples_per_gpu=8,
+    samples_per_gpu=32,
     workers_per_gpu=2,
     train=dict(
         type='BottomUpMarmosetDataset',
@@ -182,13 +182,13 @@ data = dict(
         pipeline=train_pipeline),
     val=dict(
         type='BottomUpMarmosetDataset',
-        ann_file=f'{data_root}/annotations/marmoset_keypoints.json',
+        ann_file=f'{data_root}/annotations/dlc_shuffle0_val.json',
         img_prefix=f'{data_root}/images/',
         data_cfg=data_cfg,
         pipeline=val_pipeline),
     test=dict(
         type='BottomUpMarmosetDataset',
-        ann_file=f'{data_root}/annotations/marmoset_keypoints.json',
+        ann_file=f'{data_root}/annotations/dlc_shuffle0_val.json',
         img_prefix=f'{data_root}/images/',
         data_cfg=data_cfg,
         pipeline=val_pipeline),

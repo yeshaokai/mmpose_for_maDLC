@@ -299,6 +299,8 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
         } for cls_ind, cls in enumerate(self.classes)
                      if not cls == '__background__']
 
+        print ('how many class')
+        print ([e['cls'] for e in data_pack])
         results = self._coco_keypoint_results_one_category_kernel(data_pack[0])
 
         with open(res_file, 'w') as f:
