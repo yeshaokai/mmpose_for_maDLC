@@ -19,7 +19,7 @@ optimizer_config = dict(grad_clip=None)
 lr_config = dict(
     policy='step',
     warmup='linear',
-    warmup_iters=50,
+    warmup_iters=10,
     warmup_ratio=0.001,
     step=[200, 400])
 total_epochs = 500
@@ -146,7 +146,7 @@ data_root = 'data/marmoset'
 
 data = dict(
     samples_per_gpu=32,
-    workers_per_gpu=1,
+    workers_per_gpu=2,
     train=dict(
         type='BottomUpMarmosetDataset',
         ann_file=f'{data_root}/annotations/dlc_shuffle0_train.json',

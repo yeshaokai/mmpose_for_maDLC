@@ -5,8 +5,8 @@ load_from = 'checkpoints/hrnet_w32_coco_512x512-bcb8c247_20200816.pth'
 resume_from = None
 dist_params = dict(backend='nccl')
 workflow = [('train', 1)]
-checkpoint_config = dict(interval=50)
-evaluation = dict(interval=50, metric='mAP', key_indicator='AP')
+checkpoint_config = dict(interval=100)
+evaluation = dict(interval=10, metric='mAP', key_indicator='AP')
 
 optimizer = dict(
     type='Adam',
@@ -19,8 +19,8 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=50,
     warmup_ratio=0.001,
-    step=[200, 400])
-total_epochs = 500
+    step=[50, 70])
+total_epochs = 100
 log_config = dict(
     interval=50,
     hooks=[
@@ -172,7 +172,7 @@ test_pipeline = val_pipeline
 
 data_root = 'data/marmoset'
 data = dict(
-    samples_per_gpu=32,
+    samples_per_gpu=16,
     workers_per_gpu=2,
     train=dict(
         type='BottomUpMarmosetDataset',

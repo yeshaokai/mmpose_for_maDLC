@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-export CUDA_VISIBLE_DEVICES=1,2
+export CUDA_VISIBLE_DEVICES=0,1,2
 
 CONFIG=$1
-GPUS=2
+GPUS=3
 PORT=${PORT:-29501}
 
 PYTHONPATH="$(dirname $0)/..":$PYTHONPATH \

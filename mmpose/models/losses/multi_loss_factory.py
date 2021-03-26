@@ -5,7 +5,7 @@
 
 import torch
 import torch.nn as nn
-
+import numpy as np
 from ..registry import LOSSES
 
 
@@ -45,9 +45,29 @@ class HeatmapLoss(nn.Module):
         """
 
         assert pred.size() == gt.size()
+        
+
+        # 
+
+        _gt = gt.cpu().detach().numpy()
+        #_pred = pred.cpu().detach().numpy()
+        
+        key_map = _gt.sum(axis=3).sum(axis=2)
+        #pred_map = _pred.sum(axis=3).sum(axis=2)
+        
+        kpt_mask = key_map != 0                
+
+        kpt_mask = torch.from_numpy(kpt_mask).cuda()
+                
         loss = ((pred - gt)**2) * mask[:, None, :, :].expand_as(pred)
 
-        loss = loss.mean(dim=3).mean(dim=2).mean(dim=1)
+
+        loss = loss.mean(dim=3).mean(dim=2)#*kpt_mask
+
+        #with torch.no_grad():
+        #    print ('comparison', np.sum(key_map==0,axis=1),torch.sum(loss==0,dim=1),np.sum(pred_map==0,axis=1))
+        
+        loss = loss.mean(dim=1)
 
 
         
