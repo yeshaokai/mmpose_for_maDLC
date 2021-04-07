@@ -6,6 +6,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
+import torch.nn.functional as F
 from ..registry import LOSSES
 
 
@@ -45,33 +46,64 @@ class HeatmapLoss(nn.Module):
         """
 
         assert pred.size() == gt.size()
-        
-
-        # 
-
-        _gt = gt.cpu().detach().numpy()
-        #_pred = pred.cpu().detach().numpy()
-        
-        key_map = _gt.sum(axis=3).sum(axis=2)
-        #pred_map = _pred.sum(axis=3).sum(axis=2)
-        
-        kpt_mask = key_map != 0                
-
-        kpt_mask = torch.from_numpy(kpt_mask).cuda()
                 
-        loss = ((pred - gt)**2) * mask[:, None, :, :].expand_as(pred)
 
+        temp = gt.sum(dim=3).sum(dim=2)
+        miss_mask = temp == 0
+                
+        loss = ((pred - gt)**2) * mask[:, None, :, :].expand_as(pred)                
 
-        loss = loss.mean(dim=3).mean(dim=2)#*kpt_mask
-
-        #with torch.no_grad():
-        #    print ('comparison', np.sum(key_map==0,axis=1),torch.sum(loss==0,dim=1),np.sum(pred_map==0,axis=1))
+        loss = loss.mean(dim=3).mean(dim=2)
+        
+        loss[miss_mask] = 0        
         
         loss = loss.mean(dim=1)
 
-
         
         return loss
+
+
+
+'''
+@LOSSES.register_module()
+class HeatmapLoss(nn.Module):
+    @staticmethod
+    def forward(pred, gt, mask):
+        """
+        Note:
+            batch_size: N
+            heatmaps weight: W
+            heatmaps height: H
+            max_num_people: M
+            num_keypoints: K
+        Args:
+            pred(torch.Tensor[NxKxHxW]):heatmap of output.
+            gt(torch.Tensor[NxKxHxW]): target heatmap.
+            mask(torch.Tensor[NxHxW]): mask of target.
+        """
+
+        assert pred.size() == gt.size()
+                
+        #m = nn.Sigmoid()
+        #pred = m(pred)
+
+
+
+        loss = nn.BCEWithLogitsLoss(reduction='none')
+        
+        bce_loss = loss(pred,gt)
+
+
+        
+
+        #p_t = torch.exp(-bce_loss)
+        #alpha = 0.5
+        #gamma = 1.5
+        #alpha_tensor = (1-alpha) + gt*(2*alpha-1)
+        #f_loss = alpha_tensor*(1-p_t)**gamma*bce_loss        
+
+        return bce_loss.mean(dim=3).mean(dim=2).mean(dim=1)
+'''
 
 
 @LOSSES.register_module()
@@ -248,7 +280,9 @@ class MultiLossFactory(nn.Module):
         heatmaps_losses = []
         push_losses = []
         pull_losses = []
+
         for idx in range(len(outputs)):
+
             offset_feat = 0
             if self.heatmaps_loss[idx]:
                 heatmaps_pred = outputs[idx][:, :self.num_joints]
@@ -276,5 +310,9 @@ class MultiLossFactory(nn.Module):
             else:
                 push_losses.append(None)
                 pull_losses.append(None)
+            
 
+                   
+
+                
         return heatmaps_losses, push_losses, pull_losses

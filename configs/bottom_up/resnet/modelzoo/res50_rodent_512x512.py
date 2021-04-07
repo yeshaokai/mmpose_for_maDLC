@@ -1,8 +1,16 @@
 log_level = 'INFO'
+
+
+#load_from = 'checkpoints/res50_dog_cat_sheep_horse_cow_epoch_500_coco.pth'
+#load_from = 'checkpoints/res50_dogs_epoch150_imagenet.pth'
+#load_from = 'checkpoints/res50_macaque_epoch_500.pth'
 #load_from = None
+#load_from = 'checkpoints/res50_dog_Cat_sheep_horse_cow_epoch_500_imagenet.pth'
 #load_from = 'checkpoints/res50_coco_512x512-5521bead_20200816.pth'
 #load_from = 'checkpoints/resnet50_swav.pth'
-load_from = 'checkpoints/resnet50_mocov2.pth'
+#load_from = 'checkpoints/resnet50_mocov2.pth'
+#load_from = 'checkpoints/res50_super_epoch_200.pth'
+load_from = 'work_dirs/res50_superanimal_512x512/epoch_250.pth'
 
 resume_from = None
 dist_params = dict(backend='nccl')
@@ -152,20 +160,20 @@ data = dict(
     workers_per_gpu=2,
     train=dict(
         type='BottomUpModelZooDataset',
-        ann_file=f'{data_root}/annotations/train_64.json',
-        img_prefix=f'{data_root}/images',
+        ann_file=f'{data_root}/annotations/train.json',
+        img_prefix=f'{data_root}/images/train',
         data_cfg=data_cfg,
         pipeline=train_pipeline),
     val=dict(
         type='BottomUpModelZooDataset',
         ann_file=f'{data_root}/annotations/val.json',
-        img_prefix=f'{data_root}/images',
+        img_prefix=f'{data_root}/images/val',
         data_cfg=data_cfg,
         pipeline=val_pipeline),
     test=dict(
         type='BottomUpModelZooDataset',
         ann_file=f'{data_root}/annotations/val.json',
-        img_prefix=f'{data_root}/images',
+        img_prefix=f'{data_root}/images/val',
         data_cfg=data_cfg,
         pipeline=val_pipeline),
 )

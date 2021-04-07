@@ -122,6 +122,7 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
             id2name[image_id] = file_name
             name2id[file_name] = image_id
 
+
         return id2name, name2id
 
     def _get_single(self, idx):
@@ -258,7 +259,11 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
         # iterate over images
         for idx, _preds in enumerate(preds):
             str_image_path = image_paths[idx]
-            image_id = self.name2id[os.path.basename(str_image_path)]
+            try:
+                image_id = self.name2id[os.path.basename(str_image_path)]
+            except:
+                str_image_path = '/'.join(str_image_path.split('/')[2:])
+                image_id = self.name2id[str_image_path]
             # iterate over people
             for idx_person, kpt in enumerate(_preds):
                 # use bbox area

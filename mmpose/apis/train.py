@@ -128,9 +128,15 @@ def train_model(model,
         eval_hook = DistEvalHook if distributed else EvalHook
         runner.register_hook(eval_hook(val_dataloader, **eval_cfg))
 
+
+
+
     if cfg.resume_from:
         runner.resume(cfg.resume_from)
     elif cfg.load_from:
+        # only load everything that's not head
+        
+        
         runner.load_checkpoint(cfg.load_from)
     
     runner.run(data_loaders, cfg.workflow, cfg.total_epochs)

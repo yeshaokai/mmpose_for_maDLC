@@ -163,7 +163,6 @@ class BottomUp(BasePose):
 
         if self.with_keypoint:
             output = self.keypoint_head(output)
-
         # if return loss
         losses = dict()
         if self.with_keypoint:
@@ -209,6 +208,7 @@ class BottomUp(BasePose):
         """
         assert img.size(0) == 1
         assert len(img_metas) == 1
+
 
         img_metas = img_metas[0]
 

@@ -1,18 +1,18 @@
 log_level = 'INFO'
-load_from = 'checkpoints/res50_coco_512x512-5521bead_20200816.pth'
+#load_from = 'checkpoints/res50_coco_512x512-5521bead_20200816.pth'
 #load_from = 'checkpoints/resnet50_swav.pth'
-#load_from = None
+load_from = None
 resume_from = None
 dist_params = dict(backend='nccl')
 workflow = [('train', 1)]
 checkpoint_config = dict(interval=10)
 evaluation = dict(interval=10, metric='mAP', key_indicator='AP')
 
-sigma = 2
+sigma = 8
 
 optimizer = dict(
     type='Adam',
-    lr=0.0015
+    lr=1e-4
 )
 optimizer_config = dict(grad_clip=None)
 # learning policy
@@ -21,7 +21,7 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=10,
     warmup_ratio=0.001,
-    step=[200, 500])
+    step=[500, 700])
 total_epochs = 1000
 log_config = dict(
     interval=50,
@@ -85,7 +85,7 @@ model = dict(
         nms_kernel=5,
         nms_padding=2,
         tag_per_joint=True,
-        detection_threshold=1e-1,
+        detection_threshold=0.1,
         tag_threshold=1,
         use_detection_val=True,
         ignore_too_much=False,

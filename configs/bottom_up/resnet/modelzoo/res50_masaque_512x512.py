@@ -8,7 +8,7 @@ resume_from = None
 dist_params = dict(backend='nccl')
 workflow = [('train', 1)]
 checkpoint_config = dict(interval=50)
-evaluation = dict(interval=50, metric='mAP', key_indicator='AP')
+evaluation = dict(interval=1, metric='mAP', key_indicator='AP')
 
 optimizer = dict(
     type='Adam',
@@ -81,7 +81,7 @@ model = dict(
         img_size=data_cfg['image_size']),
     test_cfg=dict(
         num_joints=channel_cfg['dataset_joints'],
-        max_num_people=30,
+        max_num_people=10,
         scale_factor=[1],
         with_heatmaps=[True],
         with_ae=[True],
@@ -114,7 +114,7 @@ train_pipeline = [
     dict(
         type='BottomUpGenerateTarget',
         sigma=2,
-        max_num_people=30,
+        max_num_people=10,
     ),
     dict(
         type='Collect',
