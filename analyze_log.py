@@ -2,10 +2,10 @@
 import glob as glob
 import os
 import re
-patt = 'su*'
+patt = 'imagenet*'
  
 dirs = glob.glob(patt)
-
+print (dirs)
 
 for f in dirs:
     logs = [e for e in glob.glob(f+'/'+'*.log') if e.endswith('.log')]
@@ -30,8 +30,10 @@ for f in dirs:
                 scores.append(score)
                 
         scores.sort()
-        
-        print ('at file {} best mAP is {}'.format(newest_log,scores[-1]))
+
+        if len(scores)!=0:
+            
+            print ('at file {} best mAP is {}'.format(newest_log,scores[-1]))
         
 
 

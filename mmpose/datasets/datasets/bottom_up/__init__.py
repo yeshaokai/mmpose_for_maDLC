@@ -6,8 +6,11 @@ from .bottom_up_mpii import BottomUpMPIIDataset
 from .bottom_up_modelzoo import BottomUpModelZooDataset
 from .bottom_up_3mouse import BottomUp3MouseDataset
 from .bottom_up_marmoset import BottomUpMarmosetDataset
+from .bottom_up_fish import BottomUpFishDataset
+from .bottom_up_pup import BottomUpPupDataset
 
 __all__ = [
     'BottomUpCocoDataset', 'BottomUpCrowdPoseDataset', 'BottomUpMhpDataset',
-    'BottomUpAicDataset','BottomUpMPIIDataset','BottomUpModelZooDataset','BottomUp3MouseDataset','BttomUpMarmosetDataset'
+    'BottomUpAicDataset','BottomUpMPIIDataset','BottomUpModelZooDataset','BottomUp3MouseDataset','BttomUpMarmosetDataset',
+    'BottomUpFishDataset','BottomUpPupDataset'
 ]

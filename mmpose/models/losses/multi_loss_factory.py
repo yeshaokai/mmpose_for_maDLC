@@ -55,7 +55,7 @@ class HeatmapLoss(nn.Module):
 
         loss = loss.mean(dim=3).mean(dim=2)
         
-        loss[miss_mask] = 0        
+        #loss[miss_mask] = 0        
         
         loss = loss.mean(dim=1)
 

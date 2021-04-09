@@ -6,11 +6,12 @@ log_level = 'INFO'
 #load_from = 'checkpoints/res50_macaque_epoch_500.pth'
 #load_from = None
 #load_from = 'checkpoints/res50_dog_Cat_sheep_horse_cow_epoch_500_imagenet.pth'
-#load_from = 'checkpoints/res50_coco_512x512-5521bead_20200816.pth'
+load_from = 'checkpoints/res50_coco_512x512-5521bead_20200816.pth'
 #load_from = 'checkpoints/resnet50_swav.pth'
 #load_from = 'checkpoints/resnet50_mocov2.pth'
 #load_from = 'checkpoints/res50_super_epoch_200.pth'
-load_from = 'work_dirs/res50_superanimal_512x512/epoch_250.pth'
+#load_from = 'work_dirs/res50_superanimal_512x512/epoch_250.pth'
+#load_from ='work_dirs/res50_superanimal_512x512/tiger_badja_animalpose_dogs/epoch_200.pth'
 
 resume_from = None
 dist_params = dict(backend='nccl')

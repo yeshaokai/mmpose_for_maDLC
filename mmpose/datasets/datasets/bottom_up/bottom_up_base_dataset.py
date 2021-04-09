@@ -50,6 +50,7 @@ class BottomUpBaseDataset(Dataset):
         self.ann_info['image_size'] = np.array(data_cfg['image_size'])
         self.ann_info['heatmap_size'] = np.array(data_cfg['heatmap_size'])
         self.ann_info['num_joints'] = data_cfg['num_joints']
+
         self.ann_info['num_scales'] = data_cfg['num_scales']
         self.ann_info['scale_aware_sigma'] = data_cfg['scale_aware_sigma']
 

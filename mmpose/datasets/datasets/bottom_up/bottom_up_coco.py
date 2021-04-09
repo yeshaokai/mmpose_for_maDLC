@@ -158,11 +158,15 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
         db_rec['mask'] = mask_list
         db_rec['joints'] = joints_list
 
+
         return db_rec
 
     def _get_joints(self, anno):
         """Get joints for all people in an image."""
         num_people = len(anno)
+
+
+
 
         if self.ann_info['scale_aware_sigma']:
             joints = np.zeros((num_people, self.ann_info['num_joints'], 4),
@@ -175,6 +179,8 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
             try:
                 joints[i, :self.ann_info['num_joints'], :3] = \
                                                               np.array(obj['keypoints']).reshape([-1, 3])
+
+
             except:
                 print ('+1')
                 continue                
@@ -187,6 +193,8 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
                     sigma = int(np.ceil(sigma))
                 assert sigma > 0, sigma
                 joints[i, :, 3] = sigma
+
+
 
         return joints
 

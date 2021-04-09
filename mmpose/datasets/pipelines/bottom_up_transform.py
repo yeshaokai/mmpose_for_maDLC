@@ -190,6 +190,7 @@ class HeatmapGenerator:
     """
 
     def __init__(self, output_res, num_joints, sigma=-1, use_udp=False):
+
         self.output_res = output_res
         self.num_joints = num_joints
         if sigma < 0:
@@ -280,6 +281,9 @@ class JointsEncoder:
         output_res = self.output_res
         sum_tot_miss = 0
         sum_all = 0
+
+
+        
         for i in range(len(joints)):
             tot = 0
             for idx, pt in enumerate(joints[i]):
@@ -288,6 +292,7 @@ class JointsEncoder:
                 if (pt[2] > 0 and 0 <= y < self.output_res
                         and 0 <= x < self.output_res):
                     if self.tag_per_joint:
+
                         visible_kpts[i][tot] = \
                             (idx * output_res**2 + y * output_res + x, 1)
                     else:
@@ -511,6 +516,8 @@ class BottomUpGenerateTarget:
             HeatmapGenerator(output_size, num_joints, self.sigma, self.use_udp)
             for output_size in heatmap_size
         ]
+
+
         joints_encoder = [
             JointsEncoder(self.max_num_people, num_joints, output_size, True)
             for output_size in heatmap_size
@@ -527,6 +534,8 @@ class BottomUpGenerateTarget:
             'joints']
 
         for scale_id in range(results['ann_info']['num_scales']):
+
+
             target_t = heatmap_generator[scale_id](joints_list[scale_id])
             joints_t = joints_encoder[scale_id](joints_list[scale_id])
 
