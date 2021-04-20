@@ -21,8 +21,8 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=100,
     warmup_ratio=0.001,
-    step=[170, 300])
-total_epochs = 500
+    step=[30, 50])
+total_epochs = 100
 log_config = dict(
     interval=50,
     hooks=[
@@ -81,7 +81,7 @@ model = dict(
         img_size=data_cfg['image_size']),
     test_cfg=dict(
         num_joints=channel_cfg['dataset_joints'],
-        max_num_people=30,
+        max_num_people=20,
         scale_factor=[1],
         with_heatmaps=[True],
         with_ae=[True],
@@ -114,7 +114,7 @@ train_pipeline = [
     dict(
         type='BottomUpGenerateTarget',
         sigma=2,
-        max_num_people=30,
+        max_num_people=20,
     ),
     dict(
         type='Collect',
