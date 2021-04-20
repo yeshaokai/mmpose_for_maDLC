@@ -2,7 +2,7 @@
 import glob as glob
 import os
 import re
-patt = 'animalpose*'
+patt = 'macaque*'
  
 dirs = glob.glob(patt)
 print (dirs)

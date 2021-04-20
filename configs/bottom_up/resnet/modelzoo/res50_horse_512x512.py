@@ -8,7 +8,7 @@ resume_from = None
 dist_params = dict(backend='nccl')
 workflow = [('train', 1)]
 checkpoint_config = dict(interval=50)
-evaluation = dict(interval=1, metric='mAP', key_indicator='AP')
+evaluation = dict(interval=10, metric='mAP', key_indicator='AP')
 
 optimizer = dict(
     type='Adam',
@@ -71,8 +71,8 @@ model = dict(
             num_stages=1,
             ae_loss_type='exp',
             with_ae_loss=[True],
-            push_loss_factor=[0.001],
-            pull_loss_factor=[0.001],
+            push_loss_factor=[1],
+            pull_loss_factor=[1],
             with_heatmaps_loss=[True],
             heatmaps_loss_factor=[1.0],
         )),
@@ -81,7 +81,7 @@ model = dict(
         img_size=data_cfg['image_size']),
     test_cfg=dict(
         num_joints=channel_cfg['dataset_joints'],
-        max_num_people=10,
+        max_num_people=30,
         scale_factor=[1],
         with_heatmaps=[True],
         with_ae=[True],
@@ -114,7 +114,7 @@ train_pipeline = [
     dict(
         type='BottomUpGenerateTarget',
         sigma=2,
-        max_num_people=10,
+        max_num_people=30,
     ),
     dict(
         type='Collect',
@@ -145,7 +145,7 @@ val_pipeline = [
 
 test_pipeline = val_pipeline
 
-data_root = 'data/cocomagic/macaquepose'
+data_root = 'data/cocomagic/horse'
 data = dict(
     samples_per_gpu=32,
     workers_per_gpu=4,
