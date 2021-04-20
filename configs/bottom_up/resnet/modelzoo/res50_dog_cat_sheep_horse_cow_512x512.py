@@ -1,14 +1,14 @@
 log_level = 'INFO'
-#load_from = None
+load_from = None
 #load_from = 'checkpoints/res50_coco_512x512-5521bead_20200816.pth'
-load_from = 'checkpoints/resnet50_swav.pth'
+#load_from = 'checkpoints/resnet50_swav.pth'
 #load_from = 'checkpoints/resnet50_mocov2.pth'
 
 resume_from = None
 dist_params = dict(backend='nccl')
 workflow = [('train', 1)]
 checkpoint_config = dict(interval=50)
-evaluation = dict(interval=50, metric='mAP', key_indicator='AP')
+evaluation = dict(interval=10, metric='mAP', key_indicator='AP')
 
 optimizer = dict(
     type='Adam',
@@ -152,19 +152,19 @@ data = dict(
     train=dict(
         type='BottomUpModelZooDataset',
         ann_file=f'{data_root}/annotations/train.json',
-        img_prefix=f'{data_root}/images',
+        img_prefix=f'{data_root}/images/train',
         data_cfg=data_cfg,
         pipeline=train_pipeline),
     val=dict(
         type='BottomUpModelZooDataset',
         ann_file=f'{data_root}/annotations/val.json',
-        img_prefix=f'{data_root}/images',
+        img_prefix=f'{data_root}/images/val',
         data_cfg=data_cfg,
         pipeline=val_pipeline),
     test=dict(
         type='BottomUpModelZooDataset',
         ann_file=f'{data_root}/annotations/val.json',
-        img_prefix=f'{data_root}/images',
+        img_prefix=f'{data_root}/images/val',
         data_cfg=data_cfg,
         pipeline=val_pipeline),
 )

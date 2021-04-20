@@ -12,7 +12,7 @@ evaluation = dict(interval=10, metric='mAP', key_indicator='AP')
 
 optimizer = dict(
     type='Adam',
-    lr=0.0015,
+    lr=0.0001,
 )
 optimizer_config = dict(grad_clip=None)
 # learning policy
@@ -147,7 +147,7 @@ test_pipeline = val_pipeline
 
 data_root = 'data/cocomagic/badja'
 data = dict(
-    samples_per_gpu=32,
+    samples_per_gpu=4,
     workers_per_gpu=4,
     train=dict(
         type='BottomUpModelZooDataset',

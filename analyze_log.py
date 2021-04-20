@@ -2,7 +2,7 @@
 import glob as glob
 import os
 import re
-patt = 'imagenet*'
+patt = 'animalpose*'
  
 dirs = glob.glob(patt)
 print (dirs)

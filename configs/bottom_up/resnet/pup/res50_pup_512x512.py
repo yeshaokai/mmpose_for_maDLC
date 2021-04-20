@@ -1,7 +1,8 @@
 log_level = 'INFO'
 #load_from = 'checkpoints/res50_coco_512x512-5521bead_20200816.pth'
 #load_from = 'checkpoints/resnet50_swav.pth'
-load_from = None
+load_from ='work_dirs/res50_superanimal_512x512/tiger_badja_animalpose_dogs/epoch_200.pth'
+#load_from = None
 resume_from = None
 dist_params = dict(backend='nccl')
 workflow = [('train', 1)]
