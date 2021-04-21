@@ -2,7 +2,10 @@
 import glob as glob
 import os
 import re
-patt = 'macaque*'
+import sys
+
+
+patt = '{}*'.format(sys.argv[1])
  
 dirs = glob.glob(patt)
 print (dirs)

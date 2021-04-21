@@ -375,7 +375,13 @@ def inference_top_down_pose_model(model,
 def inference_bottom_up_pose_model(model,
                                    img_or_path,
                                    return_heatmap=False,
+                                   return_deconv_feature = False,
+                                   return_backbone_feature = False,
                                    outputs=None):
+
+
+
+    
     """Inference a single image.
 
     num_people: P
@@ -443,13 +449,25 @@ def inference_bottom_up_pose_model(model,
                 img=data['img'],
                 img_metas=data['img_metas'],
                 return_loss=False,
-                return_heatmap=return_heatmap)
+                return_heatmap=return_heatmap,
+                return_deconv_feature = return_deconv_feature,
+                return_backbone_feature = return_backbone_feature)
 
 
 
         if return_heatmap:
             h.layer_outputs['heatmap'] = result['output_heatmap']
 
+        if return_deconv_feature:
+            
+            h.layer_outputs['deconv_feature'] = result['deconv_feature']
+
+        if return_backbone_feature:
+            
+            h.layer_outputs['backbone_feature'] = result['backbone_feature']
+
+
+            
         returned_outputs.append(h.layer_outputs)
 
 

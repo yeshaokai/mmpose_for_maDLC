@@ -35,6 +35,8 @@ def main():
     parser.add_argument(
         '--kpt-thr', type=float, default=0.3, help='Keypoint score threshold')
 
+    parser.add_argument('--tag',type=str,help='for tag use')
+    
     args = parser.parse_args()
 
     #assert args.show or (args.out_img_root != '')
@@ -54,7 +56,6 @@ def main():
     return_heatmap = False
 
     return_deconv_feature = True
-
     return_backbone_feature = True
     
     # e.g. use ('backbone', ) to return backbone feature
@@ -80,35 +81,23 @@ def main():
             return_heatmap=return_heatmap,
             return_backbone_feature = return_backbone_feature,
             return_deconv_feature = return_deconv_feature,
-            outputs=output_layer_names)
-
-        
-        if args.out_img_root == '':
-            out_file = None
-        else:
-            os.makedirs(args.out_img_root, exist_ok=True)
-            out_file = os.path.join(args.out_img_root, f'vis_{i}.jpg')
+            outputs=output_layer_names)    
 
         # show the results
-        vis_pose_result(
-            pose_model,
-            image_name,
-            pose_results,
-            dataset=dataset,
-            kpt_score_thr=args.kpt_thr,
-            show=args.show,
-            out_file=out_file)
+        for e in returned_outputs:
+            #print (e.keys())
+
+            backbone_feature_list.append(e['backbone_feature'][0].detach().cpu().mean(axis=(2,3)))
+            deconv_feature_list.append(e['deconv_feature'][0].detach().cpu().mean(axis=(2,3)))
 
 
-        backbone_feature_list.append(returned_outputs['backbone_feature'])
-        deconv_feature_list.append(returned_outputs['deconv_feature'])
-    deconv_features = np.array(deconv_feature_list)
-    backbone_features = np.array(backbone_feature_list)
+    deconv_features = np.concatenate(deconv_feature_list,axis=0)
+    backbone_features = np.concatenate(backbone_feature_list,axis=0)
 
     print ('deconv_features',deconv_features.shape)
     print ('backbone_features',backbone_features.shape)
     
-    np.savez_compressed('inference_results',
+    np.savez_compressed('{}_features'.format(args.tag),
                         deconv_features=deconv_features,
                         backbone_features = backbone_features
     )

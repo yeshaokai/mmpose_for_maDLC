@@ -80,6 +80,8 @@ class BottomUp(BasePose):
                 img_metas=None,
                 return_loss=True,
                 return_heatmap=False,
+                return_deconv_feature = False,
+                return_backbone_feature = False,
                 **kwargs):
         """Calls either forward_train or forward_test depending on whether
         return_loss is True.
@@ -122,8 +124,14 @@ class BottomUp(BasePose):
         if return_loss:
             return self.forward_train(img, targets, masks, joints, img_metas,
                                       **kwargs)
+
+
+        
         return self.forward_test(
-            img, img_metas, return_heatmap=return_heatmap, **kwargs)
+            img, img_metas, return_heatmap=return_heatmap,
+            return_backbone_feature = return_backbone_feature,
+            return_deconv_feature = return_deconv_feature,
+            **kwargs)
 
     def forward_train(self, img, targets, masks, joints, img_metas, **kwargs):
         """Forward the bottom-up model and calculate the loss.
@@ -188,8 +196,9 @@ class BottomUp(BasePose):
         if self.with_keypoint:
             output = self.keypoint_head(output)
         return output
-
-    def forward_test(self, img, img_metas, return_heatmap=False, **kwargs):
+        
+    
+    def forward_test(self, img, img_metas, return_heatmap=False, return_deconv_feature = False, return_backbone_feature = False,  **kwargs):
         """Inference the bottom-up model.
 
         Note:
@@ -223,13 +232,22 @@ class BottomUp(BasePose):
 
         aggregated_heatmaps = None
         tags_list = []
+
+        backbone_feature_list = []
+        deconv_feature_list = []
+        
         for idx, s in enumerate(sorted(test_scale_factor, reverse=True)):
             image_resized = aug_data[idx].to(img.device)
 
             features = self.backbone(image_resized)
-            if self.with_keypoint:
-                outputs = self.keypoint_head(features)
 
+            backbone_feature_list.append(features)
+            
+            if self.with_keypoint:
+                outputs,deconv_features = self.keypoint_head(features,return_deconv_feature=return_deconv_feature)
+
+                deconv_feature_list.append(deconv_features)
+                
             if self.test_cfg.get('flip_test', True):
                 # use flip test
                 features_flipped = self.backbone(
@@ -302,6 +320,11 @@ class BottomUp(BasePose):
         result['image_paths'] = image_paths
         result['output_heatmap'] = output_heatmap
 
+        if return_backbone_feature:        
+            result['backbone_feature'] = backbone_feature_list
+        if return_deconv_feature:
+            result['deconv_feature'] = deconv_feature_list
+        
         return result
 
     def show_result(self,

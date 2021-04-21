@@ -128,7 +128,7 @@ class BottomUpSimpleHead(nn.Module):
 
         return losses
 
-    def forward(self, x):
+    def forward(self, x, return_deconv_feature=False):
         """Forward function."""
         if isinstance(x, list):
             x = x[0]
@@ -136,7 +136,10 @@ class BottomUpSimpleHead(nn.Module):
         x = self.deconv_layers(x)
         y = self.final_layer(x)
         final_outputs.append(y)
-        return final_outputs
+        if return_deconv_feature:
+            return final_outputs,x
+        else:
+            return final_outputs
 
     def _make_deconv_layer(self, num_layers, num_filters, num_kernels):
         """Make deconv layers."""
