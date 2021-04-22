@@ -145,7 +145,7 @@ val_pipeline = [
 
 test_pipeline = val_pipeline
 
-data_root = 'data/cocomagic/horse'
+data_root = 'data/cocomagic/topviewmouse'
 data = dict(
     samples_per_gpu=4,
     workers_per_gpu=4,

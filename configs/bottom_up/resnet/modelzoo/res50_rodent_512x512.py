@@ -1,12 +1,11 @@
 log_level = 'INFO'
 
-
+load_from = None
 #load_from = 'checkpoints/res50_dog_cat_sheep_horse_cow_epoch_500_coco.pth'
 #load_from = 'checkpoints/res50_dogs_epoch150_imagenet.pth'
 #load_from = 'checkpoints/res50_macaque_epoch_500.pth'
-#load_from = None
 #load_from = 'checkpoints/res50_dog_Cat_sheep_horse_cow_epoch_500_imagenet.pth'
-load_from = 'checkpoints/res50_coco_512x512-5521bead_20200816.pth'
+#load_from = 'checkpoints/res50_coco_512x512-5521bead_20200816.pth'
 #load_from = 'checkpoints/resnet50_swav.pth'
 #load_from = 'checkpoints/resnet50_mocov2.pth'
 #load_from = 'checkpoints/res50_super_epoch_200.pth'
@@ -31,8 +30,8 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=50,
     warmup_ratio=0.001,
-    step=[200, 300])
-total_epochs = 500
+    step=[70, 140])
+total_epochs = 200
 log_config = dict(
     interval=50,
     hooks=[
@@ -155,9 +154,9 @@ val_pipeline = [
 
 test_pipeline = val_pipeline
 
-data_root = 'data/modelzoo/rodent'
+data_root = 'data/cocomagic/rodent_all'
 data = dict(
-    samples_per_gpu=12,
+    samples_per_gpu=4,
     workers_per_gpu=2,
     train=dict(
         type='BottomUpModelZooDataset',

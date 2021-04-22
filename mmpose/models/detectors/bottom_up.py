@@ -243,10 +243,11 @@ class BottomUp(BasePose):
 
             backbone_feature_list.append(features)
             
-            if self.with_keypoint:
-                outputs,deconv_features = self.keypoint_head(features,return_deconv_feature=return_deconv_feature)
-
+            if self.with_keypoint and return_deconv_feature:
+                outputs,deconv_features = self.keypoint_head(features,return_deconv_feature=return_deconv_feature)                
                 deconv_feature_list.append(deconv_features)
+            elif self.with_keypoint and not return_deconv_feature:
+                outputs = self.keypoint_head(features,return_deconv_feature=return_deconv_feature)
                 
             if self.test_cfg.get('flip_test', True):
                 # use flip test
@@ -374,12 +375,7 @@ class BottomUp(BasePose):
         
         pose_result = []
         for res in result:
-            pose_result.append(res['keypoints'])
-
-            
-
-
-
+            pose_result.append(res['keypoints'])            
 
 
             

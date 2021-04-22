@@ -53,16 +53,13 @@ def main():
     # optional
     return_heatmap = False
 
-    return_deconv_feature = True
 
-    return_backbone_feature = True
+
+
     
     # e.g. use ('backbone', ) to return backbone feature
     output_layer_names = None
 
-
-    deconv_feature_list = []
-    backbone_feature_list = []
     
     # process each image
     for i in range(len(img_keys)):
@@ -78,8 +75,6 @@ def main():
             pose_model,
             image_name,
             return_heatmap=return_heatmap,
-            return_backbone_feature = return_backbone_feature,
-            return_deconv_feature = return_deconv_feature,
             outputs=output_layer_names)
 
         
@@ -100,18 +95,9 @@ def main():
             out_file=out_file)
 
 
-        backbone_feature_list.append(returned_outputs['backbone_feature'])
-        deconv_feature_list.append(returned_outputs['deconv_feature'])
-    deconv_features = np.array(deconv_feature_list)
-    backbone_features = np.array(backbone_feature_list)
 
-    print ('deconv_features',deconv_features.shape)
-    print ('backbone_features',backbone_features.shape)
-    
-    np.savez_compressed('inference_results',
-                        deconv_features=deconv_features,
-                        backbone_features = backbone_features
-    )
+
+
 
 if __name__ == '__main__':
     main()
