@@ -1,4 +1,5 @@
 import mmcv
+import numpy as np
 
 from ..registry import PIPELINES
 
@@ -29,7 +30,8 @@ class LoadImageFromFile:
             img = mmcv.imread(image_file, self.color_type, self.channel_order)
         except:
             print ('problematic image {}'.format(image_file))
-
+            img = None
+            
         if img is None:
             raise ValueError('Fail to read {}'.format(image_file))
 
