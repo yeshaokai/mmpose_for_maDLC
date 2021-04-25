@@ -1,16 +1,6 @@
 log_level = 'INFO'
 
 load_from = None
-#load_from = 'checkpoints/res50_dog_cat_sheep_horse_cow_epoch_500_coco.pth'
-#load_from = 'checkpoints/res50_dogs_epoch150_imagenet.pth'
-#load_from = 'checkpoints/res50_macaque_epoch_500.pth'
-#load_from = 'checkpoints/res50_dog_Cat_sheep_horse_cow_epoch_500_imagenet.pth'
-#load_from = 'checkpoints/res50_coco_512x512-5521bead_20200816.pth'
-#load_from = 'checkpoints/resnet50_swav.pth'
-#load_from = 'checkpoints/resnet50_mocov2.pth'
-#load_from = 'checkpoints/res50_super_epoch_200.pth'
-#load_from = 'work_dirs/res50_superanimal_512x512/epoch_250.pth'
-#load_from ='work_dirs/res50_superanimal_512x512/tiger_badja_animalpose_dogs/epoch_200.pth'
 
 resume_from = None
 dist_params = dict(backend='nccl')
@@ -30,8 +20,8 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=50,
     warmup_ratio=0.001,
-    step=[70, 140])
-total_epochs = 200
+    step=[300, 400])
+total_epochs = 500
 log_config = dict(
     interval=50,
     hooks=[

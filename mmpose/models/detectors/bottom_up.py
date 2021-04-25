@@ -402,8 +402,8 @@ class BottomUp(BasePose):
                                 0,
                                 dst=img)
                         else:
-                            #r, g, b = pose_kpt_color[kid]
-                            r, g, b = pose_kpt_color[animal_id+2]
+                            r, g, b = pose_kpt_color[kid]
+                            #r, g, b = pose_kpt_color[animal_id+2]
                             cv2.circle(img, (int(x_coord), int(y_coord)),
                                        radius, (int(r), int(g), int(b)), -1)
 

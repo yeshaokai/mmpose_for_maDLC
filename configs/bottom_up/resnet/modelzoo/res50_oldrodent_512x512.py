@@ -1,27 +1,26 @@
 log_level = 'INFO'
+
 load_from = None
-#load_from = 'checkpoints/res50_coco_512x512-5521bead_20200816.pth'
-#load_from = 'checkpoints/resnet50_swav.pth'
-#load_from = 'checkpoints/resnet50_mocov2.pth'
 
 resume_from = None
 dist_params = dict(backend='nccl')
 workflow = [('train', 1)]
 checkpoint_config = dict(interval=50)
-evaluation = dict(interval=100, metric='mAP', key_indicator='AP')
+evaluation = dict(interval=10, metric='mAP', key_indicator='AP')
 
 optimizer = dict(
     type='Adam',
-    lr=0.0015,
+    lr=1e-4,
+
 )
 optimizer_config = dict(grad_clip=None)
 # learning policy
 lr_config = dict(
     policy='step',
     warmup='linear',
-    warmup_iters=100,
+    warmup_iters=50,
     warmup_ratio=0.001,
-    step=[170, 300])
+    step=[300, 400])
 total_epochs = 500
 log_config = dict(
     interval=50,
@@ -71,8 +70,8 @@ model = dict(
             num_stages=1,
             ae_loss_type='exp',
             with_ae_loss=[True],
-            push_loss_factor=[1],
-            pull_loss_factor=[1],
+            push_loss_factor=[0.001],
+            pull_loss_factor=[0.001],
             with_heatmaps_loss=[True],
             heatmaps_loss_factor=[1.0],
         )),
@@ -145,10 +144,10 @@ val_pipeline = [
 
 test_pipeline = val_pipeline
 
-data_root = 'data/cocomagic/atrwtiger'
+data_root = 'data/cocomagic/rodent'
 data = dict(
-    samples_per_gpu=32,
-    workers_per_gpu=4,
+    samples_per_gpu=4,
+    workers_per_gpu=2,
     train=dict(
         type='BottomUpModelZooDataset',
         ann_file=f'{data_root}/annotations/train.json',

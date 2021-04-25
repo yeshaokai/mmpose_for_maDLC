@@ -84,23 +84,44 @@ def main():
             outputs=output_layer_names)    
 
         # show the results
+
         for e in returned_outputs:
-            #print (e.keys())
-
-            backbone_feature_list.append(e['backbone_feature'][0].detach().cpu().mean(axis=(2,3)))
-            deconv_feature_list.append(e['deconv_feature'][0].detach().cpu().mean(axis=(2,3)))
 
 
-    deconv_features = np.concatenate(deconv_feature_list,axis=0)
-    backbone_features = np.concatenate(backbone_feature_list,axis=0)
+            deconv_feature = e['deconv_feature'][0].detach().cpu()
 
-    print ('deconv_features',deconv_features.shape)
-    print ('backbone_features',backbone_features.shape)
+
+            deconv_num_feature = deconv_feature.shape[1]
+
+
+
+            print ('deconv')
+            print (deconv_feature.shape) 
+            
+            #backbone_feature_reordered = np.transpose(backbone_feature,(0,2,3,1)).reshape(-1,backbone_num_feature)
+
+            #deconv_feature_reordered = np.transpose(deconv_feature,(0,2,3,1)).reshape(-1,deconv_num_feature)
+
+            #print ('reordered backbone')
+            #print (backbone_feature_reordered.shape)
+
+            #print ('reordered deconv')
+            #print (deconv_feature_reordered.shape)            
+            
+            #backbone_feature_list.append(backbone_feature_reordered[:1])
+            #deconv_feature_list.append(deconv_feature_reordered[:1])
+
+
+    #deconv_features = np.concatenate(deconv_feature_list,axis=0)
+    #backbone_features = np.concatenate(backbone_feature_list,axis=0)
+
+    #print ('deconv_features',deconv_features.shape)
+    #print ('backbone_features',backbone_features.shape)
     
-    np.savez_compressed('{}_features'.format(args.tag),
-                        deconv_features=deconv_features,
-                        backbone_features = backbone_features
-    )
+    #np.savez_compressed('{}_features'.format(args.tag),
+    #                    deconv_features=deconv_features,
+    #                    backbone_features = backbone_features
+    #)
 
 if __name__ == '__main__':
     main()

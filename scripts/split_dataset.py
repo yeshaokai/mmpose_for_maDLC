@@ -1,6 +1,6 @@
 import json
 
-with open('data/modelzoo/rodent/annotations/train.json','r') as f:
+with open('train.json','r') as f:
     gt = json.load(f)
 
 def parse(f):
@@ -10,7 +10,7 @@ def parse(f):
     images = f['images']
     
     print (len(images))
-    print (len(annotations))
+
     
     categories = f['categories']
 
@@ -32,7 +32,7 @@ def parse(f):
 
 
 
-    split = [4,16,32,64,128]
+    split = [4,16,32,64,128,len(images)]
 
     for num in split:
         ret_imgs = []
@@ -48,7 +48,7 @@ def parse(f):
         ret_obj['annotations'] = ret_annos
         ret_obj['categories'] = ret_categories
 
-        with open('data/modelzoo/rodent/annotations/train_{}.json'.format(num),'w') as f:
+        with open('train_{}.json'.format(num),'w') as f:
             json.dump(ret_obj,f)
 
     
