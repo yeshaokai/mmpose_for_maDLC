@@ -53,7 +53,7 @@ def main():
     img_keys = list(coco.imgs.keys())
 
     # optional
-    return_heatmap = False
+    return_heatmap = True
 
     return_deconv_feature = True
     return_backbone_feature = True
@@ -64,11 +64,18 @@ def main():
 
     deconv_feature_list = []
     backbone_feature_list = []
+    heatmap_list = []
+    
+    sample_N = 5
     
     # process each image
-    for i in range(len(img_keys)):
+    for i in range(sample_N):
+
+        if i == len(img_keys)-1:
+            break
         image_id = img_keys[i]
 
+        
         image = coco.loadImgs(image_id)[0]
         image_name = os.path.join(args.img_root, image['file_name'])
 
@@ -85,43 +92,44 @@ def main():
 
         # show the results
 
+
         for e in returned_outputs:
 
-
+            heatmap = e['heatmap']
+            print (heatmap.shape)
+            
             deconv_feature = e['deconv_feature'][0].detach().cpu()
-
-
+            
+            backbone_feature = e['backbone_feature'][0].detach().cpu()
+            
             deconv_num_feature = deconv_feature.shape[1]
-
-
-
-            print ('deconv')
-            print (deconv_feature.shape) 
+            backbone_num_feature = backbone_feature.shape[1]
+            heatmap_num_feature = heatmap.shape[1]
             
-            #backbone_feature_reordered = np.transpose(backbone_feature,(0,2,3,1)).reshape(-1,backbone_num_feature)
+            backbone_feature_reordered = np.transpose(backbone_feature,(0,2,3,1)).reshape(-1,backbone_num_feature)
 
-            #deconv_feature_reordered = np.transpose(deconv_feature,(0,2,3,1)).reshape(-1,deconv_num_feature)
+            deconv_feature_reordered = np.transpose(deconv_feature,(0,2,3,1)).reshape(-1,deconv_num_feature)
 
-            #print ('reordered backbone')
-            #print (backbone_feature_reordered.shape)
-
-            #print ('reordered deconv')
-            #print (deconv_feature_reordered.shape)            
+            heatmap_reordered = np.transpose(heatmap,(0,2,3,1)).reshape(-1,heatmap_num_feature)
             
-            #backbone_feature_list.append(backbone_feature_reordered[:1])
-            #deconv_feature_list.append(deconv_feature_reordered[:1])
+            backbone_feature_list.append(backbone_feature_reordered)
+            deconv_feature_list.append(deconv_feature_reordered)
+            heatmap_list.append(heatmap_reordered)
 
+    deconv_features = np.concatenate(deconv_feature_list,axis=0)
+    backbone_features = np.concatenate(backbone_feature_list,axis=0)
+    heatmaps = np.concatenate(heatmap_list,axis=0)
 
-    #deconv_features = np.concatenate(deconv_feature_list,axis=0)
-    #backbone_features = np.concatenate(backbone_feature_list,axis=0)
-
-    #print ('deconv_features',deconv_features.shape)
-    #print ('backbone_features',backbone_features.shape)
     
-    #np.savez_compressed('{}_features'.format(args.tag),
-    #                    deconv_features=deconv_features,
-    #                    backbone_features = backbone_features
-    #)
+    print ('deconv_features',deconv_features.shape)
+    print ('backbone_features',backbone_features.shape)
+    print ('heatmaps',heatmaps.shape)
+    
+    np.savez_compressed('{}_features'.format(args.tag),
+                        deconv_features=deconv_features,
+                        backbone_features = backbone_features,
+                        heatmaps=heatmaps
+    )
 
 if __name__ == '__main__':
     main()

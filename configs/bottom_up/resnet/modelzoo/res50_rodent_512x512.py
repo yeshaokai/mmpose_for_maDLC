@@ -15,12 +15,17 @@ optimizer = dict(
 )
 optimizer_config = dict(grad_clip=None)
 # learning policy
+'''
 lr_config = dict(
     policy='step',
     warmup='linear',
     warmup_iters=50,
     warmup_ratio=0.001,
     step=[300, 400])
+'''
+
+lr_config = dict(policy='poly', power=0.9, min_lr=1e-4, by_epoch=False)
+
 total_epochs = 500
 log_config = dict(
     interval=50,

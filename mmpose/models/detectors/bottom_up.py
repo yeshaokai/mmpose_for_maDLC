@@ -384,6 +384,7 @@ class BottomUp(BasePose):
             # draw each point on image
             if pose_kpt_color is not None:
                 assert len(pose_kpt_color) == len(kpts)
+                real_id = 0
                 for kid, kpt in enumerate(kpts):
                     x_coord, y_coord, kpt_score = int(kpt[0]), int(
                         kpt[1]), kpt[2]
@@ -402,7 +403,9 @@ class BottomUp(BasePose):
                                 0,
                                 dst=img)
                         else:
-                            r, g, b = pose_kpt_color[kid]
+                            #r, g, b = pose_kpt_color[kid]
+                            r, g, b = pose_kpt_color[real_id]
+                            real_id+=1
                             #r, g, b = pose_kpt_color[animal_id+2]
                             cv2.circle(img, (int(x_coord), int(y_coord)),
                                        radius, (int(r), int(g), int(b)), -1)
