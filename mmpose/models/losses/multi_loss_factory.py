@@ -50,12 +50,7 @@ class HeatmapLoss(nn.Module):
 
         temp = gt.sum(dim=3).sum(dim=2)
         miss_mask = temp == 0
-
-        temp_mask = miss_mask.cpu().detach().numpy()
-        
-        print (temp.sum(dim=0)==0)
-        
-                
+                                
         loss = ((pred - gt)**2) * mask[:, None, :, :].expand_as(pred)                
 
         loss = loss.mean(dim=3).mean(dim=2)
