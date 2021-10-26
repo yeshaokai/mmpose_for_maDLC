@@ -1,8 +1,9 @@
-export CUDA_VISIBLE_DEVICES=1,2
+export CUDA_VISIBLE_DEVICES=2
 
-python tools/train.py    configs/bottom_up/resnet/fish/res50_fish_512x512.py  --gpu-ids 0  --cfg-options   optimizer.lr=0.00015 data.samples_per_gpu=4
 
-#python tools/train.py    configs/bottom_up/resnet/fish/res50_fish_512x512.py  --gpu-ids 0  --cfg-options   optimizer.lr=0.00015 data.samples_per_gpu=16 --work-dir imagenet2fish_bs16_lr1e-4 &
-#python tools/train.py    configs/bottom_up/resnet/fish/res50_fish_512x512.py  --gpu-ids 0  --cfg-options   optimizer.lr=0.00015 data.samples_per_gpu=32 --work-dir imagenet2fish_bs32_lr1e-4 
+#python tools/test.py    configs/bottom_up/resnet/fish/res50_fish_512x512.py  work_dirs/res50_fish_512x512/best.pth --cfg-options data.test.ann_file=data/fish/annotations/dlc_shuffle1_train.json
 
-#python tools/train.py configs/bottom_up/hrnet/fish/hrnet_w32_fish_512x512.py --gpu-ids 0
+python tools/test.py    configs/bottom_up/hrnet/fish/hrnet_w32_fish_512x512.py  work_dirs/hrnet_w32_fish_512x512/best.pth --cfg-options data.test.ann_file=data/fish/annotations/dlc_shuffle1_train.json 
+
+#python tools/train.py    configs/bottom_up/resnet/fish/res50_fish_512x512.py  
+#python tools/train.py configs/bottom_up/hrnet/fish/hrnet_w32_fish_512x512.py 

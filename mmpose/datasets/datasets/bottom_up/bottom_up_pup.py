@@ -63,6 +63,8 @@ class BottomUpPupDataset(BottomUpCocoDataset):
         #]
 
         self.ann_info['flip_index'] = range(5)
+        #self.ann_info['flip_pairs'] = [(0,4),(1,3)]
+
         
 
         self.ann_info['use_different_joint_weights'] = False
@@ -76,7 +78,7 @@ class BottomUpPupDataset(BottomUpCocoDataset):
         self.ann_info['joint_weights'] = np.ones(5)
         
         # Adapted from COCO dataset
-        self.sigmas = np.ones(5)*0.1
+        self.sigmas = np.ones(5)*0.15
         
 
         self.coco = COCO(ann_file)
@@ -103,6 +105,40 @@ class BottomUpPupDataset(BottomUpCocoDataset):
 
         print(f'=> num_images: {self.num_images}')
 
+    def _coco_keypoint_results_one_category_kernel(self, data_pack):
+        """Get coco keypoint results."""
+        cat_id = data_pack['cat_id']
+        keypoints = data_pack['keypoints']
+        cat_results = []
+
+        for img_kpts in keypoints:
+            if len(img_kpts) == 0:
+                continue
+
+            _key_points = np.array(
+                [img_kpt['keypoints'] for img_kpt in img_kpts])
+            key_points = _key_points.reshape(-1,
+                                             self.ann_info['num_joints'] * 3)
+
+            for img_kpt, key_point in zip(img_kpts, key_points):
+                kpt = key_point.reshape((self.ann_info['num_joints'], 3))
+                left_top = np.amin(kpt, axis=0)
+                right_bottom = np.amax(kpt, axis=0)
+
+                w = right_bottom[0] - left_top[0]
+                h = right_bottom[1] - left_top[1]
+
+                cat_results.append({
+                    'image_id': img_kpt['image_id'],
+                    'category_id': cat_id,
+                    'keypoints': key_point.tolist(),
+                    'score': img_kpt['score'],
+                    'bbox': [max(0,left_top[0]-5), max(0,left_top[1]-5), w+10, h+10]
+                })
+
+        return cat_results
+        
+        
     def _do_python_keypoint_eval(self, res_file):
         """Keypoint evaluation using COCOAPI."""
 

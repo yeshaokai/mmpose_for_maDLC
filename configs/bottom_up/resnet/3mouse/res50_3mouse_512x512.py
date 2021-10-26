@@ -1,6 +1,4 @@
 log_level = 'INFO'
-#load_from = 'checkpoints/res50_coco_512x512-5521bead_20200816.pth'
-#load_from = 'checkpoints/resnet50_swav.pth'
 load_from = None
 resume_from = None
 dist_params = dict(backend='nccl')
@@ -21,13 +19,12 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=10,
     warmup_ratio=0.001,
-    step=[500, 700])
-total_epochs = 1000
+    step=[600, 1000])
+total_epochs = 3000
 log_config = dict(
     interval=50,
     hooks=[
         dict(type='TextLoggerHook'),
-        dict(type='TensorboardLoggerHook')
     ])
 
 channel_cfg = dict(
@@ -143,29 +140,29 @@ val_pipeline = [
 
 test_pipeline = val_pipeline
 
-data_root = 'data/3mouse'
+data_root = 'data/3mice'
 
 
 
 
 data = dict(
-    samples_per_gpu=32,
+    samples_per_gpu=4,
     workers_per_gpu=2,
     train=dict(
         type='BottomUp3MouseDataset',
-        ann_file=f'{data_root}/annotations/dlc_shuffle0_train.json',
+        ann_file=f'{data_root}/annotations/dlc_shuffle1_train.json',
         img_prefix=f'{data_root}/images/',
         data_cfg=data_cfg,
         pipeline=train_pipeline),
     val=dict(
         type='BottomUp3MouseDataset',
-        ann_file=f'{data_root}/annotations/dlc_shuffle0_val.json',
+        ann_file=f'{data_root}/annotations/dlc_shuffle1_val.json',
         img_prefix=f'{data_root}/images/',
         data_cfg=data_cfg,
         pipeline=val_pipeline),
     test=dict(
         type='BottomUp3MouseDataset',
-        ann_file=f'{data_root}/annotations/dlc_shuffle0_val.json',
+        ann_file=f'{data_root}/annotations/dlc_shuffle1_val.json',
         img_prefix=f'{data_root}/images/',
         data_cfg=data_cfg,
         pipeline=val_pipeline),

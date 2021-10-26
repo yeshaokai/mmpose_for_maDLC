@@ -1,14 +1,14 @@
 log_level = 'INFO'
-load_from = 'checkpoints/hrnet_w32_coco_512x512-bcb8c247_20200816.pth'
+load_from = 'checkpoints/hrnet_w32-36af842e.pth'
 resume_from = None
 dist_params = dict(backend='nccl')
 workflow = [('train', 1)]
 checkpoint_config = dict(interval=100)
-evaluation = dict(interval=10, metric='mAP', key_indicator='AP')
+evaluation = dict(interval=50, metric='mAP', key_indicator='AP')
 
 optimizer = dict(
     type='Adam',
-    lr=0.0015,
+    lr=0.0001,
 )
 optimizer_config = dict(grad_clip=None)
 # learning policy
@@ -17,8 +17,8 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=10,
     warmup_ratio=0.001,
-    step=[200, 500])
-total_epochs = 1000
+    step=[600, 1000])
+total_epochs = 3000
 log_config = dict(
     interval=50,
     hooks=[
@@ -165,26 +165,26 @@ val_pipeline = [
 
 test_pipeline = val_pipeline
 
-data_root = 'data/3mouse'
+data_root = 'data/3mice'
 
 data = dict(
-    samples_per_gpu=8,
+    samples_per_gpu=4,
     workers_per_gpu=2,
     train=dict(
         type='BottomUp3MouseDataset',
-        ann_file=f'{data_root}/annotations/dlc_shuffle0_train.json',
+        ann_file=f'{data_root}/annotations/dlc_shuffle1_train.json',
         img_prefix=f'{data_root}/images/',
         data_cfg=data_cfg,
         pipeline=train_pipeline),
     val=dict(
         type='BottomUp3MouseDataset',
-        ann_file=f'{data_root}/annotations/dlc_shuffle0_val.json',
+        ann_file=f'{data_root}/annotations/dlc_shuffle1_val.json',
         img_prefix=f'{data_root}/images/',
         data_cfg=data_cfg,
         pipeline=val_pipeline),
     test=dict(
         type='BottomUp3MouseDataset',
-        ann_file=f'{data_root}/annotations/dlc_shuffle0_val.json',
+        ann_file=f'{data_root}/annotations/dlc_shuffle1_val.json',
         img_prefix=f'{data_root}/images/',
         data_cfg=data_cfg,
         pipeline=val_pipeline),

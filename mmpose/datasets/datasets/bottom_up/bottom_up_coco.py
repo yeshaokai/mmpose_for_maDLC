@@ -60,6 +60,8 @@ class BottomUpCocoDataset(BottomUpBaseDataset):
             0, 2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15
         ]
 
+
+
         self.ann_info['use_different_joint_weights'] = False
         self.ann_info['joint_weights'] = np.array(
             [

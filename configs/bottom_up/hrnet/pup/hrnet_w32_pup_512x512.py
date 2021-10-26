@@ -1,12 +1,10 @@
 log_level = 'INFO'
-#load_from = 'checkpoints/hrnet_w32_coco_512x512-bcb8c247_20200816.pth'
-load_from = None
-
+load_from = 'checkpoints/hrnet_w32-36af842e.pth'
 resume_from = None
 dist_params = dict(backend='nccl')
 workflow = [('train', 1)]
 checkpoint_config = dict(interval=100)
-evaluation = dict(interval=10, metric='mAP', key_indicator='AP')
+evaluation = dict(interval=50, metric='mAP', key_indicator='AP')
 
 
 max_num_people = 5
@@ -120,8 +118,8 @@ model = dict(
         tag_threshold=1,
         use_detection_val=True,
         ignore_too_much=False,
-        adjust=True,
-        refine=True,
+        adjust=True,#True,
+        refine=True,#True,
         flip_test=False))
 
 train_pipeline = [
@@ -174,23 +172,23 @@ test_pipeline = val_pipeline
 
 data_root = 'data/pup'
 data = dict(
-    samples_per_gpu=16,
+    samples_per_gpu=4,
     workers_per_gpu=2,
     train=dict(
         type='BottomUpPupDataset',
-        ann_file=f'{data_root}/annotations/dlc_shuffle0_train.json',
+        ann_file=f'{data_root}/annotations/dlc_shuffle1_train.json',
         img_prefix=f'{data_root}/images/',
         data_cfg=data_cfg,
         pipeline=train_pipeline),
     val=dict(
         type='BottomUpPupDataset',
-        ann_file=f'{data_root}/annotations/dlc_shuffle0_val.json',
+        ann_file=f'{data_root}/annotations/dlc_shuffle1_val.json',
         img_prefix=f'{data_root}/images/',
         data_cfg=data_cfg,
         pipeline=val_pipeline),
     test=dict(
         type='BottomUpPupDataset',
-        ann_file=f'{data_root}/annotations/dlc_shuffle0_val.json',
+        ann_file=f'{data_root}/annotations/dlc_shuffle1_val.json',
         img_prefix=f'{data_root}/images/',
         data_cfg=data_cfg,
         pipeline=val_pipeline),
