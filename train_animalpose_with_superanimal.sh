@@ -1,8 +1,0 @@
-export CUDA_VISIBLE_DEVICES=0,1,2
-
-for train_num in 16 32 64 128 3200
-do
-    python -u tools/train.py  configs/bottom_up/resnet/modelzoo/res50_dog_cat_sheep_horse_cow_512x512.py  --gpu-ids 2 --cfg-options data.train.ann_file=data/cocomagic/dog_cat_sheep_horse_cow/annotations/train_$train_num.json   load_from=data/modelzoo_checkpoints/superanimal_epoch200.pth  optimizer.lr=0.0015 data.samples_per_gpu=32   --work-dir superanimal2animalpose_train$train_num  
-done || exit 1
-    
- 
