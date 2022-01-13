@@ -1,3 +1,32 @@
+
+## This is a modified repo of MMPose
+
+- In order to use MMpose for benchmarking HRNet and ResNet-AE as done in [Lauer, Zhou, Ye, .. Mathis, Mathis 2021 (BioRxiv)](https://www.biorxiv.org/content/10.1101/2021.04.30.442096v1), we modified the code.
+
+- Moreover, we used this modified code to produce the results as shown in our [CVPR CV4Animals Workshop paper](https://drive.google.com/file/d/1TH63UF9ro2w8DY5G3lwPDMtrLsUbA1Hi/view). 
+
+- If you use this code, we ask you cite the relevant works, and of course the MMPose Authors (see below):
+
+### Citations: 
+
+```
+@article{Lauer2021MultianimalPE,
+    title = {Multi-animal pose estimation and tracking with DeepLabCut},
+    author = {Jessy Lauer and Mu Zhou and Shaokai Ye and William Menegas and Tanmay Nath and Mohammed Mostafizur Rahman and Valentina Di Santo and Daniel Soberanes     and Guoping Feng and Venkatesh Murthy and Geoge Lauder and Catherine Dulac and Mackenzie Mathis and Alexander Mathis},
+    journal = {bioRxiv},
+    year = {2021}
+    url = {https://www.biorxiv.org/content/10.1101/2021.04.30.442096v1}}
+    
+@article{Ye2021cv4animals,
+    title = {SuperAnimal: Improving pre-training for Animal Pose Estimation},
+    author = {Shaokai Ye and Maxime Vidal and Steffen Schneider and Tian Qiu and Alexander Mathis and Mackenzie Mathis},
+    journal = {CVPR Workshop CV4Animals},
+    year = {2021}
+    url = {https://sites.google.com/view/cv4animals/paper}} 
+ ```
+ 
+###    
+
 <div align="center">
     <img src="resources/mmpose-logo.png" width="400"/>
 </div>
